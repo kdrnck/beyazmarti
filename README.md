@@ -27,17 +27,14 @@ npm install
 
 ### 2. Environment Variables
 
-`.env.local` dosyası oluşturun ve `.env.example` dosyasındaki değerleri doldurun:
+`.env.local` dosyası oluşturun ve gerekli değişkenleri ekleyin:
 
 ```bash
-cp .env.example .env.local
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_API_TOKEN=your_api_token
+REVALIDATE_SECRET=your_random_secret
 ```
-
-Gerekli değişkenler:
-- `NEXT_PUBLIC_SANITY_PROJECT_ID`: Sanity proje ID'si
-- `NEXT_PUBLIC_SANITY_DATASET`: Sanity dataset adı
-- `SANITY_API_TOKEN`: Sanity API token
-- `REVALIDATE_SECRET`: Webhook güvenlik anahtarı
 
 ### 3. Sanity Studio'yu Başlat
 
@@ -71,23 +68,6 @@ Uygulama `http://localhost:3000` adresinde çalışacak.
 - **match**: Maçlar (tarih, rakip, sonuç, set skorları)
 - **jersey**: Formalar (ad, resimler)
 
-## 🔄 ISR Revalidation
-
-Sanity webhook'ları ile otomatik revalidation:
-
-1. **Sanity Studio'da Webhook Oluştur**:
-   - URL: `https://yourdomain.com/api/revalidate`
-   - Method: POST
-   - Body: `{"secret": "your_revalidate_secret", "type": "post", "slug": "{{slug.current}}"}`
-
-2. **Desteklenen Revalidation Tipleri**:
-   - `post`: Blog yazıları
-   - `match`: Maçlar
-   - `player`: Oyuncular
-   - `boardMember`: Yönetim kurulu
-   - `staff`: Teknik ekip
-   - `jersey`: Formalar
-
 ## 📱 Sayfalar
 
 ### Statik Sayfalar
@@ -106,23 +86,22 @@ Sanity webhook'ları ile otomatik revalidation:
 - `/takimlarimiz/[slug]`: Takım detayı
 - `/studio`: Sanity Studio
 
-## 🚀 Deployment
+## 🔄 ISR Revalidation
 
-### Vercel'e Deploy
+Sanity webhook'ları ile otomatik revalidation:
 
-1. Projeyi GitHub'a push edin
-2. Vercel'e bağlayın
-3. Environment variables'ları ekleyin
-4. Deploy edin
+1. **Sanity Studio'da Webhook Oluştur**:
+   - URL: `https://yourdomain.com/api/revalidate`
+   - Method: POST
+   - Body: `{"secret": "your_revalidate_secret", "type": "post", "slug": "{{slug.current}}"}`
 
-### Environment Variables (Production)
-
-```bash
-NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
-NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=your_api_token
-REVALIDATE_SECRET=your_random_secret
-```
+2. **Desteklenen Revalidation Tipleri**:
+   - `post`: Blog yazıları
+   - `match`: Maçlar
+   - `player`: Oyuncular
+   - `boardMember`: Yönetim kurulu
+   - `staff`: Teknik ekip
+   - `jersey`: Formalar
 
 ## 📊 GROQ Queries
 
