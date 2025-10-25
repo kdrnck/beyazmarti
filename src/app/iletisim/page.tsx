@@ -4,35 +4,10 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { Section } from "@/components/sections/Section";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { useState } from "react";
 
 export default function IletisimPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Form submission logic
-    console.log("Form submitted:", formData);
-    alert("Mesajınız başarıyla gönderildi!");
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -44,152 +19,64 @@ export default function IletisimPage() {
       />
 
       <Section>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* İletişim Bilgileri */}
-          <div>
-            <h2 className="font-heading font-bold text-2xl text-text mb-6">
-              İletişim Bilgileri
-            </h2>
-            
-            <div className="space-y-6">
-              <Card className="bg-surface/10 border-surface/20">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <MapPin className="h-6 w-6 text-primary mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-text mb-1">Adres</h3>
-                      <p className="text-gray-300">
-                        Beyaz Martı Spor Kulübü<br />
-                        Spor Kompleksi<br />
-                        İstanbul, Türkiye
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-surface/10 border-surface/20">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <Phone className="h-6 w-6 text-primary mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-text mb-1">Telefon</h3>
-                      <p className="text-gray-300">+90 (212) 123 45 67</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-surface/10 border-surface/20">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <Mail className="h-6 w-6 text-primary mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-text mb-1">E-posta</h3>
-                      <p className="text-gray-300">info@beyazmarti.com</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-surface/10 border-surface/20">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <Clock className="h-6 w-6 text-primary mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-text mb-1">Çalışma Saatleri</h3>
-                      <p className="text-gray-300">
-                        Pazartesi - Cuma: 09:00 - 18:00<br />
-                        Cumartesi: 09:00 - 15:00<br />
-                        Pazar: Kapalı
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          {/* İletişim Formu */}
-          <div>
-            <h2 className="font-heading font-bold text-2xl text-text mb-6">
-              Mesaj Gönderin
-            </h2>
-            
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-heading font-bold text-3xl text-text mb-8 text-center">
+            İletişim Bilgileri
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="bg-surface/10 border-surface/20">
-              <CardContent className="p-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
+              <CardContent className="p-8">
+                <div className="flex items-start space-x-4">
+                  <MapPin className="h-8 w-8 text-primary mt-1" />
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-text mb-2">
-                      Ad Soyad *
-                    </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="bg-surface/20 border-surface/30 text-text placeholder:text-gray-400"
-                      placeholder="Adınızı ve soyadınızı girin"
-                    />
+                    <h3 className="font-semibold text-text text-lg mb-2">Adres</h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      Bahçeköy Merkez, Orman Fakültesi No:2<br />
+                      34473 Sarıyer/İstanbul
+                    </p>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
 
+            <Card className="bg-surface/10 border-surface/20">
+              <CardContent className="p-8">
+                <div className="flex items-start space-x-4">
+                  <Phone className="h-8 w-8 text-primary mt-1" />
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-text mb-2">
-                      E-posta *
-                    </label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="bg-surface/20 border-surface/30 text-text placeholder:text-gray-400"
-                      placeholder="E-posta adresinizi girin"
-                    />
+                    <h3 className="font-semibold text-text text-lg mb-2">Telefon</h3>
+                    <p className="text-gray-300 text-lg">0212 954 08 73</p>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
 
+            <Card className="bg-surface/10 border-surface/20">
+              <CardContent className="p-8">
+                <div className="flex items-start space-x-4">
+                  <Mail className="h-8 w-8 text-primary mt-1" />
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-text mb-2">
-                      Telefon
-                    </label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="bg-surface/20 border-surface/30 text-text placeholder:text-gray-400"
-                      placeholder="Telefon numaranızı girin"
-                    />
+                    <h3 className="font-semibold text-text text-lg mb-2">E-posta</h3>
+                    <p className="text-gray-300 text-lg">info@beyazmarti.org</p>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
 
+            <Card className="bg-surface/10 border-surface/20">
+              <CardContent className="p-8">
+                <div className="flex items-start space-x-4">
+                  <Clock className="h-8 w-8 text-primary mt-1" />
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-text mb-2">
-                      Mesaj *
-                    </label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      required
-                      rows={6}
-                      value={formData.message}
-                      onChange={handleChange}
-                      className="bg-surface/20 border-surface/30 text-text placeholder:text-gray-400"
-                      placeholder="Mesajınızı yazın..."
-                    />
+                    <h3 className="font-semibold text-text text-lg mb-2">Çalışma Saatleri</h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      Pazartesi - Cuma: 09:00 - 18:00<br />
+                      Cumartesi: 09:00 - 15:00<br />
+                      Pazar: Kapalı
+                    </p>
                   </div>
-
-                  <Button 
-                    type="submit" 
-                    size="lg" 
-                    className="w-full bg-primary hover:bg-primary-dark text-white"
-                  >
-                    Mesajı Gönder
-                  </Button>
-                </form>
+                </div>
               </CardContent>
             </Card>
           </div>

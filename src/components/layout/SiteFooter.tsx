@@ -44,8 +44,8 @@ export function SiteFooter() {
             <h3 className="font-heading font-semibold text-lg mb-4">Hızlı Linkler</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/hakkimizda" className="text-gray-300 hover:text-white transition-colors">
-                  Hakkımızda
+                <Link href="/kulup-hakkinda" className="text-gray-300 hover:text-white transition-colors">
+                  Kulüp Hakkında
                 </Link>
               </li>
               <li>
@@ -54,8 +54,8 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/teknik-kadromuz" className="text-gray-300 hover:text-white transition-colors">
-                  Teknik Kadromuz
+                <Link href="/teknik-ekip" className="text-gray-300 hover:text-white transition-colors">
+                  Teknik Ekip
                 </Link>
               </li>
               <li>
@@ -70,17 +70,20 @@ export function SiteFooter() {
           <div>
             <h3 className="font-heading font-semibold text-lg mb-4">İletişim</h3>
             <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-gray-300">
-                <MapPin className="h-4 w-4" />
-                <span className="text-sm">İstanbul, Türkiye</span>
+              <div className="flex items-start space-x-2 text-gray-300">
+                <MapPin className="h-4 w-4 mt-0.5" />
+                <div>
+                  <span className="text-sm block">Bahçeköy Merkez, Orman Fakültesi No:2</span>
+                  <span className="text-sm block">34473 Sarıyer/İstanbul</span>
+                </div>
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <Phone className="h-4 w-4" />
-                <span className="text-sm">+90 (212) 123 45 67</span>
+                <span className="text-sm">0212 954 08 73</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <Mail className="h-4 w-4" />
-                <span className="text-sm">info@beyazmarti.com</span>
+                <span className="text-sm">info@beyazmarti.org</span>
               </div>
             </div>
           </div>

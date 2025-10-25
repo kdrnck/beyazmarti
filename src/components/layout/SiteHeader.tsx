@@ -5,13 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 const navigation = [
   { name: "Ana Sayfa", href: "/" },
-  { name: "Kulüp", href: "/kulup" },
-  { name: "Hakkımızda", href: "/hakkimizda" },
+  { name: "Kulüp Hakkında", href: "/kulup-hakkinda" },
   { name: "Takımlarımız", href: "/takimlarimiz" },
+  { name: "Hazırlık Grupları", href: "/hazirlik-gruplari" },
+  { name: "Yönetim Kurulu", href: "/yonetim-kurulu" },
+  { name: "Teknik Ekip", href: "/teknik-ekip" },
   { name: "Blog", href: "/blog" },
   { name: "İletişim", href: "/iletisim" },
 ];
@@ -81,18 +83,6 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <Button 
-              asChild 
-              size="sm" 
-              className="bg-accent hover:bg-accent/90 text-white font-medium px-6 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-            >
-              <Link href="/iletisim">
-                Katıl
-              </Link>
-            </Button>
-          </div>
 
           {/* Mobile Menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -107,6 +97,7 @@ export function SiteHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-primary-dark border-primary">
+              <SheetTitle className="sr-only">Navigasyon Menüsü</SheetTitle>
               <div className="flex flex-col space-y-2 mt-8">
                 {navigation.map((item, index) => (
                   <Link
@@ -118,16 +109,6 @@ export function SiteHeader() {
                     {item.name}
                   </Link>
                 ))}
-                <div className="pt-4 border-t border-white/20">
-                  <Button 
-                    asChild 
-                    className="w-full bg-accent hover:bg-accent/90 text-white font-medium rounded-lg"
-                  >
-                    <Link href="/iletisim" onClick={() => setIsOpen(false)}>
-                      Katıl
-                    </Link>
-                  </Button>
-                </div>
               </div>
             </SheetContent>
           </Sheet>

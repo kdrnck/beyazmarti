@@ -5,81 +5,33 @@ import { Section } from "@/components/sections/Section";
 import { Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Image from "next/image";
+import { client, queries } from "@/lib/sanity";
+import { PortableText } from '@portabletext/react';
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-// Mock data - gerçek veriler Sanity'den gelecek
-const mockPosts = {
-  "2024-sezonu-basliyor": {
-    title: "2024 Sezonu Başlıyor!",
-    content: `
-      <p>Yeni sezonda takımlarımızın hazırlıkları devam ediyor. Genç yeteneklerimizle birlikte büyük hedeflerimiz var.</p>
-      
-      <p>Bu sezon özellikle genç takımlarımıza odaklanacağız. Futbol, basketbol ve voleybol branşlarında yeni yetenekler keşfetmeye devam ediyoruz.</p>
-      
-      <h3>Sezon Hedeflerimiz</h3>
-      <ul>
-        <li>Genç sporcularımızın gelişimini desteklemek</li>
-        <li>Takım ruhunu güçlendirmek</li>
-        <li>Fair play değerlerini benimsetmek</li>
-        <li>Sportif başarılar elde etmek</li>
-      </ul>
-      
-      <p>Tüm sporcularımıza başarılı bir sezon dileriz!</p>
-    `,
-    publishedAt: "2024-01-15",
-    tags: ["Duyuru", "Sezon"],
-    excerpt: "Yeni sezonda takımlarımızın hazırlıkları devam ediyor. Genç yeteneklerimizle birlikte büyük hedeflerimiz var.",
-  },
-  "antrenman-programlari-guncellendi": {
-    title: "Antrenman Programları Güncellendi",
-    content: `
-      <p>Sporcularımızın performansını artırmak için antrenman programlarımızı yeniledik.</p>
-      
-      <p>Yeni programlarımızda:</p>
-      <ul>
-        <li>Fiziksel kondisyon çalışmaları</li>
-        <li>Teknik gelişim egzersizleri</li>
-        <li>Taktiksel eğitimler</li>
-        <li>Mental hazırlık çalışmaları</li>
-      </ul>
-      
-      <p>Detaylı bilgi için antrenörlerimizle iletişime geçebilirsiniz.</p>
-    `,
-    publishedAt: "2024-01-10",
-    tags: ["Antrenman", "Güncelleme"],
-    excerpt: "Sporcularımızın performansını artırmak için antrenman programlarımızı yeniledik. Detaylar için okuyun.",
-  },
-  "yeni-teknik-kadro-aciklandi": {
-    title: "Yeni Teknik Kadro Açıklandı",
-    content: `
-      <p>2024 sezonu için teknik kadromuzu açıkladık. Deneyimli antrenörlerimizle güçlü bir kadro oluşturduk.</p>
-      
-      <h3>Teknik Kadromuz</h3>
-      <ul>
-        <li>Futbol: Mehmet Yılmaz (Baş Antrenör)</li>
-        <li>Basketbol: Ayşe Demir (Baş Antrenör)</li>
-        <li>Voleybol: Can Özkan (Baş Antrenör)</li>
-      </ul>
-      
-      <p>Tüm antrenörlerimiz alanlarında uzman ve deneyimli kişilerdir.</p>
-    `,
-    publishedAt: "2024-01-05",
-    tags: ["Teknik Kadro", "Duyuru"],
-    excerpt: "2024 sezonu için teknik kadromuzu açıkladık. Deneyimli antrenörlerimizle güçlü bir kadro oluşturduk.",
-  },
-};
+async function getPostBySlug(slug: string) {
+  try {
+    const post = await client.fetch(queries.postBySlug, { slug });
+    return post;
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    return null;
+  }
+}
 
 export async function generateMetadata({ params }: BlogPostPageProps) {
-  const post = mockPosts[params.slug as keyof typeof mockPosts];
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
   
   if (!post) {
     return {
-      title: "Post Bulunamadı - Beyaz Martı Spor Kulübü",
+      title: "Blog Yazısı Bulunamadı - Beyaz Martı Spor Kulübü",
     };
   }
 
@@ -89,8 +41,9 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   };
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = mockPosts[params.slug as keyof typeof mockPosts];
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();
@@ -121,22 +74,66 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               {new Date(post.publishedAt).toLocaleDateString("tr-TR")}
             </div>
 
-            <div className="flex flex-wrap gap-2 mb-8">
-              {post.tags.map((tag) => (
-                <span 
-                  key={tag}
-                  className="px-3 py-1 bg-primary/20 text-primary text-sm rounded-full"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+            {post.coverImage?.asset?.url && (
+              <div className="mb-8">
+                <Image
+                  src={post.coverImage.asset.url}
+                  alt={post.coverImage.alt || post.title}
+                  width={1200}
+                  height={600}
+                  quality={90}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
+                  className="w-full h-auto rounded-lg object-cover"
+                  priority
+                />
+              </div>
+            )}
+
+            {post.tags && post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-8">
+                {post.tags.map((tag: any) => (
+                  <span 
+                    key={tag._id}
+                    className="px-3 py-1 bg-primary/20 text-primary text-sm rounded-full"
+                  >
+                    {tag.title}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div 
-            className="prose prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+          <div className="prose prose-invert max-w-none">
+            <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+              {post.excerpt}
+            </p>
+            
+            <div className="prose prose-invert max-w-none">
+              <PortableText 
+                value={post.content}
+                components={{
+                  block: {
+                    normal: ({children}) => <p className="text-gray-300 mb-4 leading-relaxed">{children}</p>,
+                    h1: ({children}) => <h1 className="text-3xl font-bold text-white mb-6">{children}</h1>,
+                    h2: ({children}) => <h2 className="text-2xl font-bold text-white mb-4">{children}</h2>,
+                    h3: ({children}) => <h3 className="text-xl font-bold text-white mb-3">{children}</h3>,
+                  },
+                  list: {
+                    bullet: ({children}) => <ul className="list-disc list-inside text-gray-300 mb-4 space-y-2">{children}</ul>,
+                    number: ({children}) => <ol className="list-decimal list-inside text-gray-300 mb-4 space-y-2">{children}</ol>,
+                  },
+                  listItem: {
+                    bullet: ({children}) => <li className="text-gray-300">{children}</li>,
+                    number: ({children}) => <li className="text-gray-300">{children}</li>,
+                  },
+                  marks: {
+                    strong: ({children}) => <strong className="font-bold text-white">{children}</strong>,
+                    em: ({children}) => <em className="italic text-gray-200">{children}</em>,
+                  },
+                }}
+              />
+            </div>
+          </div>
         </div>
       </Section>
 
