@@ -206,6 +206,33 @@ Amacımız, her yaşta gelişen sporcularımızın hem sahada hem de yaşamları
         </div>
       </Section>
 
+      {/* Kulüp Sloganı Bölümü */}
+      <Section className="bg-gradient-to-br from-primary/20 via-transparent to-accent/20">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-surface/10 rounded-3xl p-12 border border-white/10 shadow-2xl backdrop-blur-md">
+            {/* Slogan Header */}
+            <div className="text-center mb-8">
+              <h2 className="font-heading font-bold text-4xl md:text-5xl text-white mb-6">
+                Beyaz Martı
+              </h2>
+              <h3 className="font-heading font-bold text-2xl md:text-3xl text-white mb-4">
+                Zeki - Çevik - Ahlaklı
+              </h3>
+            </div>
+
+            {/* İçerik */}
+            <div className="space-y-6 text-gray-300 leading-relaxed">
+              <p className="text-lg">
+                Mustafa Kemal Atatürk'ün <span className="font-semibold text-white">"Ben sporcunun zeki, çevik ve ahlaklısını severim"</span> sözünden ilham alarak, Beyaz Martı Spor Kulübü olarak bu anlayışı kulüp kültürümüzün merkezine yerleştirdik.
+              </p>
+              <p className="text-lg">
+                Her yaş grubundaki sporcumuzun yalnızca fiziksel değil, zihinsel ve ahlaki yönden de gelişimini hedefliyor; karakterli, disiplinli ve sorumluluk sahibi bireyler yetiştirmeyi amaçlıyoruz.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Section>
+
       {/* Formalarımız Bölümü */}
       {jerseys.length > 0 && (
         <Section>
@@ -223,9 +250,15 @@ Amacımız, her yaşta gelişen sporcularımızın hem sahada hem de yaşamları
               {jerseys.map((jersey: any) => (
                 <div key={jersey._id} className={`${jerseys.length === 1 ? 'flex-shrink' : 'flex-shrink-0'} w-80`}>
                   <div className="bg-surface/10 rounded-2xl p-6 border border-surface/20 hover:bg-surface/20 transition-all duration-300">
-                    <h3 className="font-semibold text-white text-lg mb-4 text-center">
+                    <h3 className="font-semibold text-white text-lg mb-2 text-center">
                       {jersey.name}
                     </h3>
+                    
+                    {jersey.description && (
+                      <p className="text-gray-300 text-sm text-center mb-4 leading-relaxed">
+                        {jersey.description}
+                      </p>
+                    )}
                     
                     <div className="space-y-4">
                       {jersey.image1?.asset?.url && (

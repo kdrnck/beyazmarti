@@ -147,10 +147,9 @@ export function Hero({ latestMatch }: HeroProps) {
               </h1>
             </div>
 
-            <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Sporun gücüyle gençlerimizi geleceğe hazırlıyoruz.
-              Disiplin, takım ruhu ve mükemmellik arayışımızla fark yaratıyoruz.
-            </p>
+             <p className="text-xl md:text-2xl text-white mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
+               Zeki - Çevik - Ahlaklı
+             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Button asChild size="lg" className="bg-primary hover:bg-accent text-white">

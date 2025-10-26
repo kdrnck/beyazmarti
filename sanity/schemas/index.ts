@@ -722,6 +722,13 @@ export const jersey = defineType({
       ],
     }),
     defineField({
+      name: 'description',
+      title: 'Forma Açıklaması',
+      type: 'text',
+      rows: 3,
+      description: 'Forma hakkında detaylı açıklama',
+    }),
+    defineField({
       name: 'featured',
       title: 'Öne Çıkan Forma',
       type: 'boolean',

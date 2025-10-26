@@ -305,6 +305,7 @@ export const queries = {
   jerseys: `*[_type == "jersey"] | order(order asc) {
     _id,
     name,
+    description,
     image1{
       asset->{
         _id,
