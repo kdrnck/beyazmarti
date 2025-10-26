@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
 
 export function SiteFooter() {
+  const year = new Date().getFullYear();
   return (
     <footer className="bg-primary-dark text-white">
       <div className="container mx-auto px-4 py-12">
@@ -83,14 +84,25 @@ export function SiteFooter() {
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <Mail className="h-4 w-4" />
-                <span className="text-sm">info@beyazmarti.org</span>
+                <a href="mailto:beyazmarti2015@gmail.com" className="text-sm hover:text-white transition-colors">beyazmarti2015@gmail.com</a>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-600 mt-8 pt-8 text-center text-gray-300">
-          <p>&copy; 2024 Beyaz Martı Spor Kulübü. Tüm hakları saklıdır.</p>
+        <div className="border-t border-gray-600 mt-8 pt-8 text-center text-gray-300 space-y-1">
+          <p>&copy; {year} Beyaz Martı Spor Kulübü - Tüm hakları saklıdır.</p>
+          <p>
+            Made by{' '}
+            <a
+              href="https://x.com/kdrnck"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-white"
+            >
+              kdrnck
+            </a>{' '}with ❤️
+          </p>
         </div>
       </div>
     </footer>

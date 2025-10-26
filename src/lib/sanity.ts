@@ -14,6 +14,24 @@ export function urlFor(source: any) {
   return builder.image(source)
 }
 
+// Helper: retry wrapper for Sanity fetch to reduce transient empty states
+export async function fetchWithRetry<T>(query: string, params: any = {}, attempts = 2): Promise<T> {
+  let lastError: any
+  for (let i = 0; i < attempts; i++) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore sanity client returns any
+      const data: T = await client.fetch(query, params)
+      return data
+    } catch (err) {
+      lastError = err
+      // small delay before retry
+      await new Promise((r) => setTimeout(r, 200 * (i + 1)))
+    }
+  }
+  throw lastError
+}
+
 // GROQ Queries
 export const queries = {
   // Blog queries
@@ -177,6 +195,8 @@ export const queries = {
   allMatches: `*[_type == "match"] | order(date desc) {
     _id,
     date,
+    status,
+    showOnHomepage,
     homeTeam->{
       name,
       logo{
@@ -240,6 +260,44 @@ export const queries = {
     hasSet5,
     set5,
     venue
+  }`,
+
+  // Club stats (singleton) and derived team count
+  clubStats: `*[_type == "clubStats"][0]{
+    championships,
+    activeAthletes,
+    experienceYears
+  }`,
+  teamsCount: `count(*[_type == "team" && isActive == true])`,
+  
+  // Homepage matches (dynamic blocks)
+  homepageUpcomingMatches: `*[_type == "match" && showOnHomepage == true && status == "upcoming"] | order(date asc) {
+    _id,
+    date,
+    venue,
+    homeTeam->{
+      name,
+      logo{ asset->{ _id, url }, alt }
+    },
+    awayTeam->{
+      name,
+      logo{ asset->{ _id, url }, alt }
+    }
+  }`,
+  homepagePastMatches: `*[_type == "match" && showOnHomepage == true && status == "past"] | order(date desc) {
+    _id,
+    date,
+    venue,
+    result,
+    set1, set2, set3, hasSet4, set4, hasSet5, set5,
+    homeTeam->{
+      name,
+      logo{ asset->{ _id, url }, alt }
+    },
+    awayTeam->{
+      name,
+      logo{ asset->{ _id, url }, alt }
+    }
   }`,
   
   // Image assets by class

@@ -370,6 +370,25 @@ export const match = defineType({
   type: 'document',
   fields: [
     defineField({
+      name: 'showOnHomepage',
+      title: 'Maç anasayfada gösterilsin mi?',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'status',
+      title: 'Maç Durumu',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Gelecek Maç', value: 'upcoming' },
+          { title: 'Geçmiş Maç', value: 'past' },
+        ],
+      },
+      initialValue: 'upcoming',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'date',
       title: 'Tarih',
       type: 'datetime',
@@ -394,28 +413,45 @@ export const match = defineType({
       title: 'Sonuç',
       type: 'string',
       placeholder: 'Örn: 3-1, 3-0',
-      validation: (Rule) => Rule.required(),
+      // Gelecek maç için zorunlu değil, geçmiş maç için zorunlu
+      validation: (Rule) => Rule.custom((value, context) => {
+        const status = (context?.parent as any)?.status
+        if (status === 'past' && !value) return 'Geçmiş maçlarda sonuç zorunludur.'
+        return true
+      }),
     }),
     defineField({
       name: 'set1',
       title: '1. Set',
       type: 'string',
       placeholder: 'Örn: 25-23',
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.custom((value, context) => {
+        const status = (context?.parent as any)?.status
+        if (status === 'past' && !value) return 'Geçmiş maçlarda set sonuçları zorunludur.'
+        return true
+      }),
     }),
     defineField({
       name: 'set2',
       title: '2. Set',
       type: 'string',
       placeholder: 'Örn: 25-21',
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.custom((value, context) => {
+        const status = (context?.parent as any)?.status
+        if (status === 'past' && !value) return 'Geçmiş maçlarda set sonuçları zorunludur.'
+        return true
+      }),
     }),
     defineField({
       name: 'set3',
       title: '3. Set',
       type: 'string',
       placeholder: 'Örn: 25-19',
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.custom((value, context) => {
+        const status = (context?.parent as any)?.status
+        if (status === 'past' && !value) return 'Geçmiş maçlarda set sonuçları zorunludur.'
+        return true
+      }),
     }),
     defineField({
       name: 'hasSet4',
@@ -799,6 +835,41 @@ export const hazirlikGrupuResim = defineType({
   },
 })
 
+// Club Stats (singleton)
+export const clubStats = defineType({
+  name: 'clubStats',
+  title: 'Kulüp İstatistikleri',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'championships',
+      title: 'Şampiyonluk Sayısı',
+      type: 'number',
+      initialValue: 15,
+      validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
+      name: 'activeAthletes',
+      title: 'Aktif Sporcu Sayısı',
+      type: 'number',
+      initialValue: 200,
+      validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
+      name: 'experienceYears',
+      title: 'Deneyim (Yıl)',
+      type: 'number',
+      initialValue: 10,
+      validation: (Rule) => Rule.min(0),
+    }),
+  ],
+  preview: {
+    prepare() {
+      return { title: 'Kulüp İstatistikleri' }
+    },
+  },
+})
+
 // Export all schemas as an array
 export const schemaTypes = [
   post,
@@ -813,4 +884,5 @@ export const schemaTypes = [
   imageAsset,
   jersey,
   hazirlikGrupuResim,
+  clubStats,
 ]

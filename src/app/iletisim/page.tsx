@@ -46,7 +46,7 @@ export default function IletisimPage() {
                   <Phone className="h-8 w-8 text-primary mt-1" />
                   <div>
                     <h3 className="font-semibold text-text text-lg mb-2">Telefon</h3>
-                    <p className="text-gray-300 text-lg">0212 954 08 73</p>
+                    <a href="tel:+902129540873" className="text-primary text-lg hover:underline">0212 954 08 73</a>
                   </div>
                 </div>
               </CardContent>
@@ -58,7 +58,7 @@ export default function IletisimPage() {
                   <Mail className="h-8 w-8 text-primary mt-1" />
                   <div>
                     <h3 className="font-semibold text-text text-lg mb-2">E-posta</h3>
-                    <p className="text-gray-300 text-lg">info@beyazmarti.org</p>
+                    <p className="text-gray-300 text-lg">beyazmarti2015@gmail.com</p>
                   </div>
                 </div>
               </CardContent>

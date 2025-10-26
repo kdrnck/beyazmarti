@@ -76,16 +76,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             {post.coverImage?.asset?.url && (
               <div className="mb-8">
-                <Image
-                  src={post.coverImage.asset.url}
-                  alt={post.coverImage.alt || post.title}
-                  width={1200}
-                  height={600}
-                  quality={90}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
-                  className="w-full h-auto rounded-lg object-cover"
-                  priority
-                />
+                <div className="relative w-full">
+                  <Image
+                    src={post.coverImage.asset.url}
+                    alt={post.coverImage.alt || post.title}
+                    width={1600}
+                    height={900}
+                    quality={90}
+                    sizes="100vw"
+                    className="w-full h-auto rounded-lg object-contain bg-black/20"
+                    priority
+                  />
+                </div>
               </div>
             )}
 

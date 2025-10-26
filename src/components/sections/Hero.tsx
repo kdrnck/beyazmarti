@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Trophy, Users, Target, Calendar } from "lucide-react";
+import { ArrowRight, Trophy, Users, Target, Calendar, Heart } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { client, queries, fetchWithRetry } from "@/lib/sanity";
 
 interface Match {
   _id: string;
@@ -39,9 +40,10 @@ interface Match {
 
 interface HeroProps {
   latestMatch: Match | null;
+  showLatestMatch?: boolean;
 }
 
-export function Hero({ latestMatch }: HeroProps) {
+export function Hero({ latestMatch, showLatestMatch = true }: HeroProps) {
   const [isPaused, setIsPaused] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -70,6 +72,56 @@ export function Hero({ latestMatch }: HeroProps) {
   const handleTouchEnd = () => {
     setTimeout(() => setIsPaused(false), 2000);
   };
+
+  // Stats component fetching from Sanity
+  async function getStats() {
+    try {
+      const [stats, teamsCount] = await Promise.all([
+        fetchWithRetry<any>(queries.clubStats),
+        fetchWithRetry<any>(queries.teamsCount)
+      ]);
+      return { ...(stats || {}), teamsCount: teamsCount || 0 };
+    } catch {
+      return { championships: 0, activeAthletes: 0, experienceYears: 0, teamsCount: 0 };
+    }
+  }
+
+  function HeroStatsInner({ data }: { data: any }) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 md:max-w-4xl md:mx-auto mt-4">
+        <div className="text-center bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+          <div className="p-3 bg-gradient-to-br from-accent/20 to-accent/10 rounded-full w-fit mx-auto mb-3">
+            <Trophy className="h-7 w-7 text-accent" />
+          </div>
+          <div className="font-heading font-bold text-3xl text-white mb-1">{data?.championships ?? 0}+</div>
+          <div className="text-gray-300 text-sm">Şampiyonluk</div>
+        </div>
+        <div className="text-center bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+          <div className="p-3 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full w-fit mx-auto mb-3">
+            <Users className="h-7 w-7 text-primary" />
+          </div>
+          <div className="font-heading font-bold text-3xl text-white mb-1">{data?.activeAthletes ?? 0}+</div>
+          <div className="text-gray-300 text-sm">Aktif Sporcu</div>
+        </div>
+        <div className="text-center bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+          <div className="p-3 bg-gradient-to-br from-accent/20 to-accent/10 rounded-full w-fit mx-auto mb-3">
+            <Target className="h-7 w-7 text-accent" />
+          </div>
+          <div className="font-heading font-bold text-3xl text-white mb-1">{data?.experienceYears ?? 0}+</div>
+          <div className="text-gray-300 text-sm">Yıllık Deneyim</div>
+        </div>
+      </div>
+    )
+  }
+
+  function HeroStats() {
+    const [data, setData] = useState<any | null>(null);
+    useEffect(() => {
+      getStats().then(setData);
+    }, []);
+    if (!data) return null;
+    return <HeroStatsInner data={data} />
+  }
 
   const getMatchResult = (match: Match) => {
     if (!match) return "0-0";
@@ -121,7 +173,7 @@ export function Hero({ latestMatch }: HeroProps) {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background/95 to-background">
+    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background/95 to-background">
       {/* Elegant Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
       
@@ -137,7 +189,7 @@ export function Hero({ latestMatch }: HeroProps) {
       <div className="absolute inset-0 opacity-[0.02] bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
 
       <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-4xl mx-auto pt-16 md:pt-8">
+          <div className="text-center max-w-4xl mx-auto pt-6 md:pt-4">
             <div>
               <h1 className="font-heading font-bold text-5xl md:text-7xl text-white mb-6">
                 Beyaz Martı
@@ -151,7 +203,7 @@ export function Hero({ latestMatch }: HeroProps) {
                Zeki - Çevik - Ahlaklı
              </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Button asChild size="lg" className="bg-primary hover:bg-accent text-white">
                 <Link href="/kulup-hakkinda">
                   Kulübümüzü Keşfedin
@@ -166,7 +218,7 @@ export function Hero({ latestMatch }: HeroProps) {
             </div>
 
           {/* Latest Match Section */}
-          {latestMatch && latestMatch.homeTeam && latestMatch.awayTeam && (
+          {showLatestMatch && latestMatch && latestMatch.homeTeam && latestMatch.awayTeam && (
             <div className="mb-12">
               <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl hover:shadow-primary/20 transition-all duration-300">
                 <div className="flex items-center justify-between">
@@ -249,84 +301,8 @@ export function Hero({ latestMatch }: HeroProps) {
             </div>
           )}
 
-          {/* Stats */}
-          <div className="md:grid md:grid-cols-3 md:gap-8 md:max-w-3xl md:mx-auto">
-            {/* Mobile Carousel */}
-            <div 
-              className="md:hidden overflow-x-auto pb-4"
-              ref={scrollContainerRef}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
-            >
-              <div className="flex gap-4 px-4" style={{ width: 'max-content' }}>
-                {/* Repeat cards for infinite loop */}
-                {[...Array(6)].map((_, index) => (
-                  <div key={index} className="text-center flex-shrink-0">
-                    <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-6 mb-4 border border-white/20 shadow-2xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105 w-64">
-                      {index % 3 === 0 && (
-                        <>
-                          <div className="p-3 bg-gradient-to-br from-accent/20 to-accent/10 rounded-full w-fit mx-auto mb-4">
-                            <Trophy className="h-8 w-8 text-accent" />
-                          </div>
-                          <div className="font-heading font-bold text-4xl text-white mb-2">15+</div>
-                          <div className="text-gray-300 font-medium">Şampiyonluk</div>
-                        </>
-                      )}
-                      {index % 3 === 1 && (
-                        <>
-                          <div className="p-3 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full w-fit mx-auto mb-4">
-                            <Users className="h-8 w-8 text-primary" />
-                          </div>
-                          <div className="font-heading font-bold text-4xl text-white mb-2">200+</div>
-                          <div className="text-gray-300 font-medium">Aktif Sporcu</div>
-                        </>
-                      )}
-                      {index % 3 === 2 && (
-                        <>
-                          <div className="p-3 bg-gradient-to-br from-accent/20 to-accent/10 rounded-full w-fit mx-auto mb-4">
-                            <Target className="h-8 w-8 text-accent" />
-                          </div>
-                          <div className="font-heading font-bold text-4xl text-white mb-2">10+</div>
-                          <div className="text-gray-300 font-medium">Yıllık Deneyim</div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Desktop Grid */}
-            <div className="hidden md:block text-center">
-              <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 mb-4 border border-white/20 shadow-2xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105">
-                <div className="p-3 bg-gradient-to-br from-accent/20 to-accent/10 rounded-full w-fit mx-auto mb-4">
-                  <Trophy className="h-8 w-8 text-accent" />
-                </div>
-                <div className="font-heading font-bold text-4xl text-white mb-2">15+</div>
-                <div className="text-gray-300 font-medium">Şampiyonluk</div>
-              </div>
-            </div>
-            <div className="hidden md:block text-center">
-              <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 mb-4 border border-white/20 shadow-2xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105">
-                <div className="p-3 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full w-fit mx-auto mb-4">
-                  <Users className="h-8 w-8 text-primary" />
-                </div>
-                <div className="font-heading font-bold text-4xl text-white mb-2">200+</div>
-                <div className="text-gray-300 font-medium">Aktif Sporcu</div>
-              </div>
-            </div>
-            <div className="hidden md:block text-center">
-              <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 mb-4 border border-white/20 shadow-2xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105">
-                <div className="p-3 bg-gradient-to-br from-accent/20 to-accent/10 rounded-full w-fit mx-auto mb-4">
-                  <Target className="h-8 w-8 text-accent" />
-                </div>
-                <div className="font-heading font-bold text-4xl text-white mb-2">10+</div>
-                <div className="text-gray-300 font-medium">Yıllık Deneyim</div>
-              </div>
-            </div>
-          </div>
+          {/* Stats (from Sanity) */}
+          <HeroStats />
         </div>
       </div>
     </section>

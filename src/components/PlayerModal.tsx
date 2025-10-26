@@ -29,7 +29,7 @@ interface PlayerModalProps {
 export function PlayerModal({ player, isOpen, onClose }: PlayerModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-surface/95 border-surface/20">
+      <DialogContent className="max-w-2xl bg-background/95 border border-surface/30 backdrop-blur-xl text-text">
         <DialogHeader>
           <DialogTitle className="text-text text-2xl font-bold text-center">
             {player.name}
@@ -81,10 +81,12 @@ export function PlayerModal({ player, isOpen, onClose }: PlayerModalProps) {
               </div>
 
               {player.bio && (
-                <div className="mt-6 pt-4 border-t border-surface/20">
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Biyografi</h4>
-                  <p className="text-text leading-relaxed">{player.bio}</p>
-                </div>
+                <details className="mt-6">
+                  <summary className="cursor-pointer text-primary hover:text-accent transition-colors">Biyografiyi göster</summary>
+                  <div className="pt-4 border-t border-surface/20 mt-3">
+                    <p className="text-text leading-relaxed">{player.bio}</p>
+                  </div>
+                </details>
               )}
             </CardContent>
           </Card>

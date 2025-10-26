@@ -43,14 +43,15 @@ export default async function BlogPage() {
               <Card key={post._id} className="bg-surface/10 border-surface/20 hover:bg-surface/20 transition-all duration-300 group">
                 <Link href={`/blog/${post.slug.current}`}>
                   <CardHeader className="p-0">
-                    <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 rounded-t-lg overflow-hidden">
+                    <div className="bg-gradient-to-br from-primary/20 to-accent/20 rounded-t-lg overflow-hidden">
                       {post.coverImage?.asset?.url ? (
                         <Image
                           src={post.coverImage.asset.url}
                           alt={post.coverImage.alt || post.title}
-                          width={400}
-                          height={250}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          width={1200}
+                          height={675}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="w-full h-auto object-contain bg-black/20 group-hover:opacity-95 transition-opacity duration-300"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">

@@ -28,8 +28,9 @@ export async function POST(request: NextRequest) {
           // Revalidate specific match (if we had match detail pages)
           revalidatePath(`/matches/${slug}`)
         }
-        // Always revalidate home page for featured matches
+        // Always revalidate home page sections and matches page
         revalidatePath('/')
+        revalidatePath('/maclar')
         break
 
       case 'player':
@@ -41,6 +42,22 @@ export async function POST(request: NextRequest) {
       case 'boardMember':
         // Revalidate about pages
         revalidatePath('/yonetim-kurulu')
+        break
+
+      case 'hazirlikGrupuResim':
+        // Revalidate hazirlik groups page
+        revalidatePath('/hazirlik-gruplari')
+        break
+
+      case 'jersey':
+        // Revalidate kulup-hakkinda page
+        revalidatePath('/kulup-hakkinda')
+        break
+
+      case 'clubStats':
+        // Stats affect hero and about page
+        revalidatePath('/')
+        revalidatePath('/kulup-hakkinda')
         break
 
       default:

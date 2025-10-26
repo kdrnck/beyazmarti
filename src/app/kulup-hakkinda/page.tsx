@@ -11,6 +11,9 @@ export const metadata = {
   description: "Beyaz Martı Spor Kulübü hakkında bilgi edinin. Misyonumuz, vizyonumuz ve değerlerimiz.",
 };
 
+// Revalidate every hour to get fresh data from Sanity
+export const revalidate = 3600;
+
 async function getJerseys() {
   try {
     const jerseys = await client.fetch(queries.jerseys);
@@ -21,8 +24,19 @@ async function getJerseys() {
   }
 }
 
+async function getClubStats() {
+  try {
+    const stats = await client.fetch(queries.clubStats);
+    const teamsCount = await client.fetch(queries.teamsCount);
+    return { ...(stats || {}), teamsCount: teamsCount || 0 };
+  } catch (e) {
+    return { championships: 0, activeAthletes: 0, experienceYears: 0, teamsCount: 0 };
+  }
+}
+
 export default async function KulupHakkindaPage() {
   const jerseys = await getJerseys();
+  const stats = await getClubStats();
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -70,22 +84,22 @@ export default async function KulupHakkindaPage() {
             <div className="grid grid-cols-2 gap-6">
               <div className="text-center">
                 <Trophy className="h-8 w-8 text-accent mx-auto mb-2" />
-                <div className="font-heading font-bold text-2xl text-text">15+</div>
+                <div className="font-heading font-bold text-2xl text-text">{(stats?.championships ?? 0)}+</div>
                 <div className="text-gray-300 text-sm">Şampiyonluk</div>
               </div>
               <div className="text-center">
                 <Users className="h-8 w-8 text-primary mx-auto mb-2" />
-                <div className="font-heading font-bold text-2xl text-text">200+</div>
+                <div className="font-heading font-bold text-2xl text-text">{(stats?.activeAthletes ?? 0)}+</div>
                 <div className="text-gray-300 text-sm">Aktif Sporcu</div>
               </div>
               <div className="text-center">
                 <Target className="h-8 w-8 text-accent mx-auto mb-2" />
-                <div className="font-heading font-bold text-2xl text-text">10+</div>
+                <div className="font-heading font-bold text-2xl text-text">{(stats?.experienceYears ?? 0)}+</div>
                 <div className="text-gray-300 text-sm">Yıllık Deneyim</div>
               </div>
               <div className="text-center">
                 <Heart className="h-8 w-8 text-primary mx-auto mb-2" />
-                <div className="font-heading font-bold text-2xl text-text">11</div>
+                <div className="font-heading font-bold text-2xl text-text">{stats?.teamsCount ?? 0}</div>
                 <div className="text-gray-300 text-sm">Takım</div>
               </div>
             </div>

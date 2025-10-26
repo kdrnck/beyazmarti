@@ -12,6 +12,9 @@ export const metadata = {
   description: "Beyaz Martı Spor Kulübü maç sonuçları ve programı.",
 };
 
+// Revalidate to keep matches fresh
+export const revalidate = 600;
+
 async function getMatches() {
   try {
     const matches = await client.fetch(queries.allMatches);
@@ -24,6 +27,8 @@ async function getMatches() {
 
 export default async function MaclarPage() {
   const matches = await getMatches();
+  const upcoming = matches.filter((m: any) => m.status === 'upcoming');
+  const past = matches.filter((m: any) => m.status === 'past');
 
   const getMatchResult = (match: any) => {
     return match.result || "0-0";
@@ -54,9 +59,89 @@ export default async function MaclarPage() {
       />
 
       <Section>
-        {matches && matches.length > 0 ? (
-          <div className="space-y-6">
-            {matches.map((match: any) => (
+        {upcoming && upcoming.length > 0 ? (
+          <>
+            <h2 className="font-heading font-bold text-2xl text-text mb-4">Gelecek Maçlar</h2>
+            <div className="space-y-6 mb-12">
+              {upcoming.map((match: any) => (
+                <Card key={match._id} className="bg-surface/10 border-surface/20 hover:bg-surface/20 transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      {/* Home Team */}
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+                          {match.homeTeam.logo?.asset?.url ? (
+                            <Image
+                              src={match.homeTeam.logo.asset.url}
+                              alt={match.homeTeam.logo.alt || match.homeTeam.name}
+                              width={24}
+                              height={24}
+                              className="rounded-full"
+                            />
+                          ) : (
+                            <span className="text-primary font-bold">
+                              {match.homeTeam.name.charAt(0)}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-text">{match.homeTeam.name}</h3>
+                          <p className="text-sm text-gray-400">Ev Sahibi</p>
+                        </div>
+                      </div>
+
+                      {/* Match Info */}
+                      <div className="text-center">
+                        <div className="flex items-center justify-center mb-2">
+                          <Calendar className="h-4 w-4 text-gray-400 mr-2" />
+                          <span className="text-sm text-gray-400">
+                            {new Date(match.date).toLocaleDateString("tr-TR")}
+                          </span>
+                        </div>
+
+                        {match.venue && (
+                          <div className="flex items-center justify-center mt-2">
+                            <MapPin className="h-3 w-3 text-gray-400 mr-1" />
+                            <span className="text-xs text-gray-400">{match.venue}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Away Team */}
+                      <div className="flex items-center space-x-4">
+                        <div>
+                          <h3 className="font-semibold text-text text-right">{match.awayTeam.name}</h3>
+                          <p className="text-sm text-gray-400 text-right">Deplasman</p>
+                        </div>
+                        <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+                          {match.awayTeam.logo?.asset?.url ? (
+                            <Image
+                              src={match.awayTeam.logo.asset.url}
+                              alt={match.awayTeam.logo.alt || match.awayTeam.name}
+                              width={24}
+                              height={24}
+                              className="rounded-full"
+                            />
+                          ) : (
+                            <span className="text-primary font-bold">
+                              {match.awayTeam.name.charAt(0)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </>
+        ) : null}
+
+        {past && past.length > 0 ? (
+          <>
+            <h2 className="font-heading font-bold text-2xl text-text mb-4">Geçmiş Maçlar</h2>
+            <div className="space-y-6">
+              {past.map((match: any) => (
               <Card key={match._id} className="bg-surface/10 border-surface/20 hover:bg-surface/20 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
@@ -137,8 +222,9 @@ export default async function MaclarPage() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         ) : (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">

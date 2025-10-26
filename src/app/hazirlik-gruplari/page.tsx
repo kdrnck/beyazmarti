@@ -11,6 +11,9 @@ export const metadata = {
   description: "Beyaz Martı Spor Kulübü hazırlık grupları. 6-14 yaş aralığında voleybol sporuna doğru adımlarla başlayın.",
 };
 
+// Revalidate every hour to get fresh data from Sanity
+export const revalidate = 3600;
+
 async function getHazirlikGrupResimler() {
   try {
     const resimler = await client.fetch(queries.hazirlikGrupuResimler);

@@ -94,6 +94,9 @@ export function PlayersList({ players }: PlayersListProps) {
                         {player.age} yaş
                       </div>
                     )}
+                    {player.bio && (
+                      <div className="mt-3 text-sm text-gray-400 underline decoration-dotted">Biyografiyi görmek için tıkla</div>
+                    )}
                   </div>
                 </div>
               ))}
