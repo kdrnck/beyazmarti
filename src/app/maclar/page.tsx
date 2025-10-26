@@ -54,7 +54,7 @@ export default async function MaclarPage() {
       />
 
       <Section>
-        {matches.length > 0 ? (
+        {matches && matches.length > 0 ? (
           <div className="space-y-6">
             {matches.map((match: any) => (
               <Card key={match._id} className="bg-surface/10 border-surface/20 hover:bg-surface/20 transition-all duration-300">

@@ -78,7 +78,7 @@ export default async function TakimlarimizPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {teams.map((team: Team, index: number) => {
+          {teams && teams.map((team: Team, index: number) => {
             const TeamIcon = getTeamIcon(team.level || '');
             
             return (

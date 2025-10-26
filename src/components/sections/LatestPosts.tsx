@@ -38,7 +38,7 @@ async function getLatestPosts(): Promise<Post[]> {
 export async function LatestPosts() {
   const posts = await getLatestPosts();
 
-  if (posts.length === 0) {
+  if (!posts || posts.length === 0) {
     return (
       <section className="py-16 bg-surface/5">
         <div className="container mx-auto px-4">
