@@ -34,7 +34,7 @@ export default async function KulupHakkindaPage() {
       />
 
       <Section>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
           <div>
             <h2 className="font-heading font-bold text-3xl text-text mb-6">
               Tarihimiz
@@ -51,6 +51,21 @@ export default async function KulupHakkindaPage() {
               </p>
             </div>
           </div>
+          
+          {/* Kulüp Bayrağı */}
+          <div className="flex items-center justify-center">
+            <div className="relative w-full max-w-xs">
+              <Image
+                src="/bayrak.jpg"
+                alt="Beyaz Martı Spor Kulübü Bayrağı"
+                width={400}
+                height={600}
+                className="w-full h-auto rounded-lg shadow-lg"
+                priority
+              />
+            </div>
+          </div>
+
           <div className="bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl p-8">
             <div className="grid grid-cols-2 gap-6">
               <div className="text-center">
@@ -95,7 +110,10 @@ export default async function KulupHakkindaPage() {
               Misyonumuz
             </h3>
             <p className="text-gray-300 leading-relaxed">
-              Eğitimin insan yaşamındaki rolünün gittikçe önem kazandığı günümüzde zeki, çevik, çalışkan, dürüst, ahlaklı, cesaretli, sorumluluk ve özgüven sahibi, çevresine duyarlı, sosyal yönü ve iletişim kabiliyeti güçlü sporcular yetiştirerek, milli takımlarımıza kazandırmak ve uluslararası yarışmalarda ülkemizin en iyi şekilde temsil edilmesine katkıda bulunmaktır.
+            Beyaz Martı Spor Kulübü olarak, sporu yalnızca fiziksel bir etkinlik değil, karakter gelişiminin ve toplumsal dayanışmanın en güçlü araçlarından biri olarak görüyoruz. Amacımız, eğitimle sporu birleştirerek; zeki, çevik, çalışkan, dürüst, ahlaklı, cesaretli, özgüvenli ve sorumluluk sahibi bireyler yetiştirmektir.
+Gençlerimizin fiziksel, zihinsel ve sosyal yönden gelişimlerini desteklerken; takım ruhunu, saygıyı, disiplin ve adalet duygusunu ön planda tutuyoruz.
+Kulübümüz, yalnızca başarıya değil, aynı zamanda sporun kültürünü ve etik değerlerini benimsemiş bir nesil yetiştirmeye adanmıştır.
+Bu anlayışla, ulusal ve uluslararası arenada ülkemizi gururla temsil edecek sporcular yetiştirerek Türk sporuna kalıcı katkılar sunmayı hedefliyoruz.
             </p>
           </div>
 
@@ -105,7 +123,11 @@ export default async function KulupHakkindaPage() {
               Vizyonumuz
             </h3>
             <p className="text-gray-300 leading-relaxed">
-              Dünyadaki sportif değişimleri yakından takip ederek, bilgi, beceri ve antrenman konularında geliştirdiğimiz yöntem planlama ve stratejiler doğrultusunda, diğer kulüplere geniş ufku ile öncülük ve engin bilgisi ile rehberlik yapacak bir kulüp modeli oluşturarak ülkemizin yüksek spor kültürüne ulaşmasında pay sahibi olmaktır.
+            Beyaz Martı Spor Kulübü olarak vizyonumuz; sporu bir yaşam biçimi haline getiren, küçük yaşta başlayan doğru eğitimle geleceğin güçlü sporcularını yetiştiren öncü bir kulüp olmaktır.
+Hazırlık gruplarımızdan itibaren her yaş grubunda oluşturduğumuz takımlarla sporcularımıza kesintisiz bir gelişim ortamı sunuyoruz.
+Bu süreçte çocuklarımıza yalnızca fiziksel beceri kazandırmakla kalmıyor, aynı zamanda disiplin, öz güven, takım ruhu, saygı ve sorumluluk gibi değerleri de öğretiyoruz.
+Dünyadaki sportif yenilikleri yakından takip ederek, bilgi, beceri ve antrenman yöntemlerimizi sürekli güncelliyor; modern spor bilimiyle pedagojiyi bir araya getiriyoruz.
+Amacımız, her yaşta gelişen sporcularımızın hem sahada hem de yaşamlarında başarılı, ahlaklı ve topluma örnek bireyler olmalarını sağlamak; aynı zamanda ülkemizin spor kültürünü güçlendiren, diğer kulüplere ilham veren bir model oluşturmaktır.
             </p>
           </div>
         </div>
@@ -116,40 +138,70 @@ export default async function KulupHakkindaPage() {
           <h2 className="font-heading font-bold text-3xl text-text mb-4">
             Değerlerimiz
           </h2>
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-            Kulübümüzün temel değerleri ve ilkeleri
+          <p className="text-gray-300 text-lg max-w-3xl mx-auto leading-relaxed">
+            Kulübümüzün temel değerleri, sporu yalnızca bir yarış değil, karakter inşasının da en güçlü alanı olarak görmemizden doğar.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="h-8 w-8 text-primary" />
+        <div className="space-y-8">
+          {/* Takım Ruhu */}
+          <div className="bg-surface/10 rounded-2xl p-8 hover:bg-surface/15 transition-all duration-300">
+            <div className="flex items-start space-x-4">
+              <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <Users className="h-8 w-8 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-heading font-bold text-2xl text-text mb-3">
+                  Takım Ruhu
+                </h3>
+                <p className="text-gray-300 leading-relaxed mb-3">
+                  Birlikte başarmanın gücüne inanıyoruz.
+                </p>
+                <p className="text-gray-400 leading-relaxed">
+                  Sporcularımızın birbirine güven duyduğu, yardımlaşmanın ön planda olduğu bir ortam oluşturuyoruz. Her oyuncumuzun takım arkadaşının başarısından mutluluk duymasını, ortak hedefler için tek yürek olmayı esas alıyoruz.
+                </p>
+              </div>
             </div>
-            <h3 className="font-semibold text-text mb-2">Takım Ruhu</h3>
-            <p className="text-sm text-gray-300">
-              Birlikte çalışmanın ve dayanışmanın gücüne inanıyoruz.
-            </p>
           </div>
-          
-          <div className="text-center">
-            <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Target className="h-8 w-8 text-primary" />
+
+          {/* Disiplin */}
+          <div className="bg-surface/10 rounded-2xl p-8 hover:bg-surface/15 transition-all duration-300">
+            <div className="flex items-start space-x-4">
+              <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <Target className="h-8 w-8 text-accent" />
+              </div>
+              <div>
+                <h3 className="font-heading font-bold text-2xl text-text mb-3">
+                  Disiplin
+                </h3>
+                <p className="text-gray-300 leading-relaxed mb-3">
+                  Başarının tesadüf değil, istikrar ve kararlılıkla geldiğine inanıyoruz.
+                </p>
+                <p className="text-gray-400 leading-relaxed">
+                  Düzenli antrenman alışkanlığı, zaman yönetimi, sorumluluk bilinci ve çalışma disiplini, Beyaz Martı kültürünün vazgeçilmez parçalarıdır. Sporcunun yalnızca sahada değil, hayatın her alanında düzenli ve planlı olmasını destekliyoruz.
+                </p>
+              </div>
             </div>
-            <h3 className="font-semibold text-text mb-2">Disiplin</h3>
-            <p className="text-sm text-gray-300">
-              Düzenli antrenman ve çalışma disiplini ile hedeflere ulaşırız.
-            </p>
           </div>
-          
-          <div className="text-center">
-            <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Trophy className="h-8 w-8 text-primary" />
+
+          {/* Başarı */}
+          <div className="bg-surface/10 rounded-2xl p-8 hover:bg-surface/15 transition-all duration-300">
+            <div className="flex items-start space-x-4">
+              <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <Trophy className="h-8 w-8 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-heading font-bold text-2xl text-text mb-3">
+                  Başarı
+                </h3>
+                <p className="text-gray-300 leading-relaxed mb-3">
+                  Bizim için başarı, sadece skor tabelasında değil; gelişimde, mücadelede ve karakterde gizlidir.
+                </p>
+                <p className="text-gray-400 leading-relaxed">
+                  Her sporcumuzun potansiyelini en üst seviyeye çıkararak, sürekli gelişimi ve mükemmellik arayışını sürdürüyoruz. Kazanırken mütevazı, kaybederken mücadeleci kalmayı öğretiyoruz.
+                </p>
+              </div>
             </div>
-            <h3 className="font-semibold text-text mb-2">Başarı</h3>
-            <p className="text-sm text-gray-300">
-              Sürekli gelişim ve mükemmellik arayışı içindeyiz.
-            </p>
           </div>
         </div>
       </Section>
