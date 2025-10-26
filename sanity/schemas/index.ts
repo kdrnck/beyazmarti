@@ -736,6 +736,62 @@ export const jersey = defineType({
   },
 })
 
+export const hazirlikGrupuResim = defineType({
+  name: 'hazirlikGrupuResim',
+  title: 'Galeri Görseli',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Başlık',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'image',
+      title: 'Görsel',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'Hangi Galeriye Ait?',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Hazırlık Grupları', value: 'hazirlik-gruplari' },
+        ],
+      },
+      initialValue: 'hazirlik-gruplari',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'order',
+      title: 'Sıralama',
+      type: 'number',
+      initialValue: 0,
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      gallery: 'gallery',
+      media: 'image',
+    },
+    prepare(selection) {
+      const { title, gallery } = selection
+      const galleryName = gallery === 'hazirlik-gruplari' ? 'Hazırlık Grupları' : gallery
+      return { 
+        ...selection, 
+        subtitle: galleryName 
+      }
+    },
+  },
+})
+
 // Export all schemas as an array
 export const schemaTypes = [
   post,
@@ -749,4 +805,5 @@ export const schemaTypes = [
   staff,
   imageAsset,
   jersey,
+  hazirlikGrupuResim,
 ]

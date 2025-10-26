@@ -2,169 +2,108 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { Section } from "@/components/sections/Section";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Calendar, Clock, Target } from "lucide-react";
+import { client, queries } from "@/lib/sanity";
+import Image from "next/image";
+import { Users, Target, Heart } from "lucide-react";
 
 export const metadata = {
   title: "Hazırlık Grupları - Beyaz Martı Spor Kulübü",
-  description: "Beyaz Martı Spor Kulübü hazırlık grupları hakkında bilgi edinin. Voleybol sporuna başlamak için ideal ortam.",
+  description: "Beyaz Martı Spor Kulübü hazırlık grupları. 6-14 yaş aralığında voleybol sporuna doğru adımlarla başlayın.",
 };
 
-export default function HazirlikGruplariPage() {
+async function getHazirlikGrupResimler() {
+  try {
+    const resimler = await client.fetch(queries.hazirlikGrupuResimler);
+    return resimler || [];
+  } catch (error) {
+    console.error('Error fetching hazirlik group images:', error);
+    return [];
+  }
+}
+
+export default async function HazirlikGruplariPage() {
+  const resimler = await getHazirlikGrupResimler();
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
       
       <PageHeader 
-        title="Hazırlık Grupları"
-        subtitle="Voleybol Sporuna İlk Adım"
-        description="Voleybol sporuna yeni başlayan gençlerimiz için özel hazırlık gruplarımız."
+        title="Hazırlık Gruplarımız"
+        subtitle="Beyaz Martı'nın Temeli"
+        description="Büyük başarılar küçük yaşta atılan doğru adımlarla başlar"
       />
 
       <Section>
-        <div className="text-center mb-12">
-          <h2 className="font-heading font-bold text-3xl text-text mb-4">
-            Hazırlık Gruplarımız
-          </h2>
-          <p className="text-gray-300 text-lg max-w-3xl mx-auto">
-            Voleybol sporuna yeni başlayan çocuklarımız için özel olarak tasarlanmış hazırlık gruplarımızda, 
-            temel teknikleri öğrenirken aynı zamanda sporun keyfini çıkaracaklar.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {/* Grup 1 */}
-          <Card className="bg-surface/10 border-surface/20 hover:bg-surface/20 transition-all duration-300">
-            <CardHeader>
-              <CardTitle className="text-text flex items-center">
-                <Users className="h-5 w-5 mr-2 text-primary" />
-                6-8 Yaş Hazırlık Grubu
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-300">Pazartesi, Çarşamba</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Clock className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-300">16:00 - 17:00</span>
-              </div>
-              <p className="text-sm text-gray-300">
-                Temel motor beceriler, koordinasyon ve voleybol oyununun temellerini öğrenme.
+        <div className="max-w-4xl mx-auto">
+          <div className="prose prose-invert prose-lg max-w-none">
+            <div className="space-y-6 text-gray-300 leading-relaxed">
+              <p className="text-xl font-semibold text-text">
+                Hazırlık Gruplarımız – Beyaz Martı'nın Temeli
               </p>
-            </CardContent>
-          </Card>
-
-          {/* Grup 2 */}
-          <Card className="bg-surface/10 border-surface/20 hover:bg-surface/20 transition-all duration-300">
-            <CardHeader>
-              <CardTitle className="text-text flex items-center">
-                <Users className="h-5 w-5 mr-2 text-primary" />
-                9-11 Yaş Hazırlık Grubu
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-300">Salı, Perşembe</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Clock className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-300">17:00 - 18:00</span>
-              </div>
-              <p className="text-sm text-gray-300">
-                Temel voleybol teknikleri, pas, servis ve oyun kurallarını öğrenme.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Grup 3 */}
-          <Card className="bg-surface/10 border-surface/20 hover:bg-surface/20 transition-all duration-300">
-            <CardHeader>
-              <CardTitle className="text-text flex items-center">
-                <Users className="h-5 w-5 mr-2 text-primary" />
-                12-14 Yaş Hazırlık Grubu
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-300">Cumartesi</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Clock className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-300">10:00 - 12:00</span>
-              </div>
-              <p className="text-sm text-gray-300">
-                Gelişmiş teknikler, takım oyunu ve müsabaka hazırlığı.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Program Detayları */}
-        <Card className="bg-surface/10 border-surface/20">
-          <CardHeader>
-            <CardTitle className="text-text flex items-center">
-              <Target className="h-5 w-5 mr-2 text-primary" />
-              Program Detayları
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="font-semibold text-text mb-4">Eğitim İçeriği</h3>
-                <ul className="space-y-2 text-sm text-gray-300">
-                  <li>• Temel motor beceriler geliştirme</li>
-                  <li>• Voleybol teknikleri (pas, servis, smaç)</li>
-                  <li>• Koordinasyon ve denge çalışmaları</li>
-                  <li>• Takım oyunu ve iletişim</li>
-                  <li>• Fair-play ve spor ahlakı</li>
-                </ul>
-              </div>
               
-              <div>
-                <h3 className="font-semibold text-text mb-4">Gereksinimler</h3>
-                <ul className="space-y-2 text-sm text-gray-300">
-                  <li>• Spor kıyafetleri ve spor ayakkabı</li>
-                  <li>• Su matarası</li>
-                  <li>• Sağlık raporu (ilk kayıt için)</li>
-                  <li>• Veli izin belgesi</li>
-                  <li>• Motivasyon ve istek</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </Section>
+              <p>
+                Beyaz Martı Spor Kulübü'nde inanıyoruz ki büyük başarılar küçük yaşta atılan doğru adımlarla başlar.
+                6–14 yaş aralığındaki çocuklarımız için oluşturduğumuz hazırlık grupları, voleybolun temellerinin atıldığı, karakterin şekillendiği ve özgüvenin güçlendiği özel bir eğitim alanıdır.
+              </p>
 
-      {/* CTA Section */}
-      <Section className="bg-surface/5">
-        <div className="text-center">
-          <h2 className="font-heading font-bold text-3xl text-text mb-4">
-            Hazırlık Grubumuza Katılmak İster misiniz?
-          </h2>
-          <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-            Çocuğunuzun voleybol sporuna sağlam temellerle başlamasını istiyorsanız, 
-            hazırlık gruplarımıza katılabilirsiniz.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/iletisim"
-              className="inline-flex items-center justify-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-            >
-              İletişime Geçin
-            </a>
-            <a
-              href="/takimlarimiz"
-              className="inline-flex items-center justify-center px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors"
-            >
-              Takımlarımızı İnceleyin
-            </a>
+              <p>
+                Bu gruplarda sporcularımız, yaşlarına uygun antrenman programlarıyla motor becerilerini, koordinasyonlarını ve teknik gelişimlerini ilerletirken; disiplin, takım ruhu ve paylaşma kültürünü de öğrenirler.
+                Bizim için her antrenman sadece bir çalışma değil, bir karakter gelişimi sürecidir.
+              </p>
+
+              <p>
+                Beyaz Martı'nın hazırlık gruplarında yetişen her çocuk, sahada mücadele etmeyi, kazandığında mütevazı kalmayı, kaybettiğinde ise vazgeçmemeyi öğrenir.
+              </p>
+
+              <p>
+                Hazırlık gruplarımız, <strong className="text-primary">"Zeki, çevik ve ahlaklı"</strong> sporcular yetiştirme hedefimizin ilk ve en önemli adımıdır.
+                Burada atılan her adım, geleceğin başarılı, özgüvenli ve topluma örnek bireylerini yetiştirme yolculuğunun başlangıcıdır.
+              </p>
+            </div>
           </div>
         </div>
       </Section>
+
+      {/* Gallery Section */}
+      {resimler.length > 0 && (
+        <Section className="bg-surface/5">
+          <div className="text-center mb-12">
+            <h2 className="font-heading font-bold text-3xl text-text mb-4">
+              Hazırlık Gruplarımızdan Kareler
+            </h2>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+              Sporcularımızın hazırlık süreçlerinden anlar
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {resimler.map((resim: any) => (
+              <div 
+                key={resim._id} 
+                className="relative group overflow-hidden rounded-2xl bg-surface/10 hover:bg-surface/20 transition-all duration-300"
+              >
+                <div className="aspect-[4/3] relative">
+                  <Image
+                    src={resim.image.asset.url}
+                    alt={resim.image.alt || resim.title || 'Hazırlık grubu antrenmanı'}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                </div>
+                {resim.title && (
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <p className="text-white font-semibold">{resim.title}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
 
       <SiteFooter />
     </div>

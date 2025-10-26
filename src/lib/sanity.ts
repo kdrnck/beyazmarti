@@ -321,4 +321,18 @@ export const queries = {
     },
     featured
   }`,
+
+  // Hazırlık Grupları Resimleri
+  hazirlikGrupuResimler: `*[_type == "hazirlikGrupuResim" && gallery == "hazirlik-gruplari"] | order(order asc) {
+    _id,
+    title,
+    gallery,
+    image{
+      asset->{
+        _id,
+        url
+      },
+      alt
+    }
+  }`,
 }
