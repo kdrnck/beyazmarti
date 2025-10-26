@@ -50,13 +50,13 @@ export function SiteHeader() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative">
-              <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 p-1">
+              <div className="shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <Image
                   src="/logo.png"
                   alt="Beyaz Martı Spor Kulübü"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 object-contain"
                   priority
                 />
               </div>

@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/sections/PageHeader";
 import { Section } from "@/components/sections/Section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Trophy, Target, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { client, queries } from "@/lib/sanity";
 
@@ -22,18 +23,6 @@ interface Team {
 export const metadata = {
   title: "Takımlarımız - Beyaz Martı Spor Kulübü",
   description: "Beyaz Martı Spor Kulübü voleybol takımları hakkında bilgi edinin.",
-};
-
-// Icon mapping for teams
-const getTeamIcon = (level: string) => {
-  switch (level) {
-    case 'A':
-      return Trophy;
-    case 'B':
-      return Target;
-    default:
-      return Users;
-  }
 };
 
 async function getTeams() {
@@ -79,15 +68,19 @@ export default async function TakimlarimizPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {teams && teams.map((team: Team, index: number) => {
-            const TeamIcon = getTeamIcon(team.level || '');
-            
             return (
               <Card key={team._id} className="bg-gradient-to-br from-white/10 to-white/5 border-white/20 hover:from-white/20 hover:to-white/10 transition-all duration-300 hover:scale-105 group cursor-pointer h-full shadow-lg hover:shadow-xl">
                 <Link href={`/takimlarimiz/${team.slug?.current || 'takim-bulunamadi'}`} className="h-full flex flex-col">
                   <CardHeader className="text-center pb-6">
                     <div className="flex justify-center mb-6">
-                      <div className="p-5 bg-gradient-to-br from-primary/30 to-primary/10 rounded-2xl group-hover:from-primary/40 group-hover:to-primary/20 transition-all duration-300 shadow-lg">
-                        <TeamIcon className="h-10 w-10 text-primary" />
+                      <div className="shadow-xl group-hover:scale-110 transition-all duration-300">
+                        <Image
+                          src="/logo.png"
+                          alt="Beyaz Martı Spor Kulübü"
+                          width={64}
+                          height={64}
+                          className="w-16 h-16 object-contain"
+                        />
                       </div>
                     </div>
                     <CardTitle className="text-text group-hover:text-accent transition-colors text-xl font-bold mb-3">

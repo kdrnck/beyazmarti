@@ -250,17 +250,12 @@ Amacımız, her yaşta gelişen sporcularımızın hem sahada hem de yaşamları
               {jerseys.map((jersey: any) => (
                 <div key={jersey._id} className={`${jerseys.length === 1 ? 'flex-shrink' : 'flex-shrink-0'} w-80`}>
                   <div className="bg-surface/10 rounded-2xl p-6 border border-surface/20 hover:bg-surface/20 transition-all duration-300">
-                    <h3 className="font-semibold text-white text-lg mb-2 text-center">
+                    <h3 className="font-semibold text-white text-lg mb-4 text-center">
                       {jersey.name}
                     </h3>
                     
-                    {jersey.description && (
-                      <p className="text-gray-300 text-sm text-center mb-4 leading-relaxed">
-                        {jersey.description}
-                      </p>
-                    )}
-                    
-                    <div className="space-y-4">
+                    {/* Forma Resimleri */}
+                    <div className="space-y-4 mb-4">
                       {jersey.image1?.asset?.url && (
                         <div className="relative">
                           <Image
@@ -289,6 +284,13 @@ Amacımız, her yaşta gelişen sporcularımızın hem sahada hem de yaşamları
                         </div>
                       )}
                     </div>
+
+                    {/* Forma Açıklaması */}
+                    {jersey.description && (
+                      <p className="text-gray-300 text-sm text-center leading-relaxed mt-4">
+                        {jersey.description}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
