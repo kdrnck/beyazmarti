@@ -6,8 +6,8 @@ import { schemaTypes } from './sanity/schemas'
 export default defineConfig({
   name: 'beyazmarti',
   title: 'Beyaz Martı Spor Kulübü',
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'ln2xhw8c',
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
   plugins: [
     structureTool({
       structure: (S) =>
