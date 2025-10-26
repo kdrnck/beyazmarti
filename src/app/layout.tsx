@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr">
-      <body className="font-sans antialiased bg-background text-text border-[6px] border-[#D32F2F] rounded-[8px]" suppressHydrationWarning={true}>
+      <body className="font-sans antialiased bg-background text-text border-[9px] border-[#D32F2F] rounded-[8px]" suppressHydrationWarning={true}>
         {children}
       </body>
     </html>
