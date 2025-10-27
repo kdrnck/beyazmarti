@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 
+// Warm up the cache by fetching the path server-side
+async function warmPath(path: string) {
+  try {
+    const baseUrl = process.env.PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const url = `${baseUrl}${path}`
+    await fetch(url, { 
+      method: 'GET', 
+      cache: 'no-store', 
+      headers: { 'x-warm': '1' } 
+    })
+  } catch (error) {
+    console.error(`Failed to warm path ${path}:`, error)
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
     const secret = request.nextUrl.searchParams.get('secret')
@@ -13,6 +28,9 @@ export async function GET(request: NextRequest) {
 
     // Revalidate the specified path
     revalidatePath(path)
+
+    // Warm the cache
+    await warmPath(path)
 
     return NextResponse.json({ 
       ok: true,
@@ -50,10 +68,12 @@ export async function POST(request: NextRequest) {
     const _id = doc?._id
 
     const touched: string[] = []
+    const pathsToWarm: string[] = []
 
     const hitPath = (p: string, type?: 'page' | 'layout') => { 
       revalidatePath(p, type)
-      touched.push(`path:${p}`) 
+      touched.push(`path:${p}`)
+      pathsToWarm.push(p)
     }
     
     console.log('Revalidating:', { type, slug, _id })
@@ -105,6 +125,9 @@ export async function POST(request: NextRequest) {
       hitPath('/maclar')
       hitPath('/takimlarimiz')
     }
+
+    // Warm up all revalidated paths
+    await Promise.all(pathsToWarm.map(p => warmPath(p)))
 
     return NextResponse.json({ 
       ok: true, 
