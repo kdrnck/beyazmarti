@@ -13,6 +13,9 @@ export const metadata = {
   description: "Beyaz Martı Spor Kulübü teknik ekip üyeleri hakkında bilgi edinin.",
 };
 
+// Revalidate every 60 seconds to keep staff fresh
+export const revalidate = 60;
+
 async function getStaff() {
   try {
     const staff = await fetchWithRetry<any[]>(queries.staff);

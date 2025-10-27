@@ -1,6 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
+export async function GET(request: NextRequest) {
+  try {
+    const secret = request.nextUrl.searchParams.get('secret')
+    const path = request.nextUrl.searchParams.get('path') || '/'
+
+    // Verify secret
+    if (secret !== process.env.REVALIDATE_SECRET) {
+      return NextResponse.json({ message: 'Invalid secret' }, { status: 401 })
+    }
+
+    // Revalidate the specified path
+    revalidatePath(path)
+
+    return NextResponse.json({ 
+      revalidated: true, 
+      now: Date.now(),
+      path
+    })
+  } catch (error) {
+    console.error('Revalidation error:', error)
+    return NextResponse.json(
+      { error: 'Error revalidating' },
+      { status: 500 }
+    )
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { secret, type, slug } = await request.json()

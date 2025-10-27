@@ -9,6 +9,9 @@ import Image from "next/image";
 import { client, queries } from "@/lib/sanity";
 import { PortableText } from '@portabletext/react';
 
+// Revalidate every 60 seconds to keep blog posts fresh
+export const revalidate = 60;
+
 interface BlogPostPageProps {
   params: Promise<{
     slug: string;

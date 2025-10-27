@@ -14,6 +14,9 @@ export const metadata = {
   description: "Beyaz Martı Spor Kulübü takım detayları ve oyuncu profilleri.",
 };
 
+// Revalidate every 60 seconds to keep team details fresh
+export const revalidate = 60;
+
 interface PageProps {
   params: Promise<{
     slug: string;

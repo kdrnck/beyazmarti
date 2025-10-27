@@ -13,6 +13,9 @@ export const metadata = {
   description: "Beyaz Martı Spor Kulübü'nden en güncel haberler ve duyurular.",
 };
 
+// Revalidate every 60 seconds to keep blog content fresh
+export const revalidate = 60;
+
 async function getPosts() {
   try {
     const posts = await client.fetch(queries.posts);

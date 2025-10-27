@@ -25,6 +25,9 @@ export const metadata = {
   description: "Beyaz Martı Spor Kulübü voleybol takımları hakkında bilgi edinin.",
 };
 
+// Revalidate every 60 seconds to keep teams fresh
+export const revalidate = 60;
+
 async function getTeams() {
   try {
     const teams = await client.fetch(queries.teams);

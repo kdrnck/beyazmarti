@@ -13,6 +13,9 @@ export const metadata = {
   description: "Beyaz Martı Spor Kulübü yönetim kurulu üyeleri hakkında bilgi edinin.",
 };
 
+// Revalidate every 60 seconds to keep board members fresh
+export const revalidate = 60;
+
 async function getBoardMembers() {
   try {
     const members = await fetchWithRetry<any[]>(queries.boardMembers);
