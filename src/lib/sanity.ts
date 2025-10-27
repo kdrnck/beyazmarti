@@ -1,11 +1,13 @@
 import { createClient } from 'next-sanity'
 import imageUrlBuilder from '@sanity/image-url'
 
+// Public client for general use (always uses published data)
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
   apiVersion: '2024-01-01',
   useCdn: true,
+  perspective: 'published',
 })
 
 const builder = imageUrlBuilder(client)
@@ -14,14 +16,21 @@ export function urlFor(source: any) {
   return builder.image(source)
 }
 
-// Helper: retry wrapper for Sanity fetch to reduce transient empty states
-export async function fetchWithRetry<T>(query: string, params: any = {}, attempts = 2): Promise<T> {
+// Helper: retry wrapper for Sanity fetch with cache tags for on-demand revalidation
+export async function fetchWithRetry<T>(
+  query: string, 
+  params: any = {}, 
+  attempts = 2,
+  tags?: string[]
+): Promise<T> {
   let lastError: any
   for (let i = 0; i < attempts; i++) {
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore sanity client returns any
-      const data: T = await client.fetch(query, params)
+      const data: T = await client.fetch(query, params, {
+        next: tags ? { tags } : undefined
+      })
       return data
     } catch (err) {
       lastError = err
@@ -30,6 +39,15 @@ export async function fetchWithRetry<T>(query: string, params: any = {}, attempt
     }
   }
   throw lastError
+}
+
+// Fetch wrapper with cache tags
+export async function fetchWithTags<T>(
+  query: string,
+  params: any = {},
+  tags: string[]
+): Promise<T> {
+  return fetchWithRetry<T>(query, params, 2, tags)
 }
 
 // GROQ Queries

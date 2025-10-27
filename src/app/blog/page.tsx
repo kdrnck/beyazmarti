@@ -18,7 +18,9 @@ export const revalidate = 60;
 
 async function getPosts() {
   try {
-    const posts = await client.fetch(queries.posts);
+    const posts = await client.fetch(queries.posts, {}, {
+      next: { tags: ['posts'] }
+    });
     return posts || [];
   } catch (error) {
     console.error('Error fetching posts:', error);

@@ -30,7 +30,9 @@ export const revalidate = 60;
 
 async function getTeams() {
   try {
-    const teams = await client.fetch(queries.teams);
+    const teams = await client.fetch(queries.teams, {}, {
+      next: { tags: ['teams'] }
+    });
     return teams || [];
   } catch (error) {
     console.error('Error fetching teams:', error);

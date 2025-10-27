@@ -16,7 +16,9 @@ export const revalidate = 3600;
 
 async function getJerseys() {
   try {
-    const jerseys = await client.fetch(queries.jerseys);
+    const jerseys = await client.fetch(queries.jerseys, {}, {
+      next: { tags: ['jerseys', 'about'] }
+    });
     return jerseys || [];
   } catch (error) {
     console.error('Error fetching jerseys:', error);
@@ -26,8 +28,12 @@ async function getJerseys() {
 
 async function getClubStats() {
   try {
-    const stats = await client.fetch(queries.clubStats);
-    const teamsCount = await client.fetch(queries.teamsCount);
+    const stats = await client.fetch(queries.clubStats, {}, {
+      next: { tags: ['stats', 'about'] }
+    });
+    const teamsCount = await client.fetch(queries.teamsCount, {}, {
+      next: { tags: ['stats'] }
+    });
     return { ...(stats || {}), teamsCount: teamsCount || 0 };
   } catch (e) {
     return { championships: 0, activeAthletes: 0, experienceYears: 0, teamsCount: 0 };

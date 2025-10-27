@@ -16,7 +16,9 @@ export const revalidate = 3600;
 
 async function getHazirlikGrupResimler() {
   try {
-    const resimler = await client.fetch(queries.hazirlikGrupuResimler);
+    const resimler = await client.fetch(queries.hazirlikGrupuResimler, {}, {
+      next: { tags: ['hazirlik-gruplari'] }
+    });
     return resimler || [];
   } catch (error) {
     console.error('Error fetching hazirlik group images:', error);

@@ -18,7 +18,7 @@ export const revalidate = 60;
 
 async function getStaff() {
   try {
-    const staff = await fetchWithRetry<any[]>(queries.staff);
+    const staff = await fetchWithRetry<any[]>(queries.staff, {}, 2, ['staff']);
     return staff || [];
   } catch (error) {
     console.error('Error fetching staff:', error);

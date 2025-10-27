@@ -55,6 +55,98 @@ Beyaz Martı Spor Kulübü, 2015 yılında kurulmuş ve voleybol branşında faa
 - **Sanity CMS**: Headless content management
 - **Vercel**: Hosting ve deployment
 
+## 🔄 Anında Güncelleme Sistemi (ISR + On-Demand Revalidation + Preview)
+
+Bu proje, içerik yayınlandıktan hemen sonra sitede anında güncelleme görünmesi için **ISR (Incremental Static Regeneration)**, **on-demand revalidation** ve **preview mode** kullanmaktadır.
+
+### Nasıl Çalışır?
+
+**Halka Açık Sayfalar (Public):**
+- Sayfalar cache'lenmiş olarak servis edilir (hızlı yüklenme)
+- Her 60 saniyede otomatik yenilenir (ISR fallback)
+- Sanity webhook tetiklendiğinde ilgili cache anında temizlenir
+
+**Yönetici Önizleme (Staff Preview):**
+- Staff preview modunda taslak içerikleri anında görür
+- Public cache'i etkilemeden çalışır
+- Sanity Studio'dan direkt önizleme açılabilir
+
+### 🔗 Sanity Webhook Kurulumu
+
+**1. Sanity Studio'da Webhook Oluştur:**
+- URL: `https://your-domain.vercel.app/api/revalidate`
+- Method: `POST`
+- HTTP Headers:
+  ```
+  x-revalidate-secret: <REVALIDATE_SECRET>
+  ```
+- Trigger: `create`, `update`, `publish` eventleri
+- Document types: `post`, `match`, `player`, `boardMember`, `staff`, `team`, `hazirlikGrupuResim`, `jersey`, `clubStats`
+
+### 🔑 Ortam Değişkenleri (Environment Variables)
+
+```bash
+# Revalidation Secret (webhook için)
+openssl rand -base64 32
+REVALIDATE_SECRET=<generated-secret>
+
+# Preview Secret (staff önizleme için)
+openssl rand -base64 32
+PREVIEW_SECRET=<generated-secret>
+
+# Sanity API Read Token (taslak verileri için)
+# https://sanity.io/manage adresinden alın
+SANITY_API_READ_TOKEN=<your-read-token>
+
+# Sanity Project Bilgileri
+NEXT_PUBLIC_SANITY_PROJECT_ID=<your-project-id>
+NEXT_PUBLIC_SANITY_DATASET=production
+```
+
+### 👁️ Preview Mode Kullanımı
+
+**Önizlemeyi Aç:**
+```
+https://your-domain.vercel.app/api/preview?secret=<PREVIEW_SECRET>&path=/blog/yazi-slug
+```
+
+**Önizlemeyi Kapat:**
+```
+https://your-domain.vercel.app/api/preview/disable
+```
+
+### 🔄 Manuel Revalidation
+
+Bir sayfayı manuel olarak yenilemek için:
+
+```bash
+curl "https://your-domain.vercel.app/api/revalidate?secret=<REVALIDATE_SECRET>&path=/blog"
+```
+
+### 📋 Cache Tag Sistemi
+
+Her içerik türü için özel cache tag'leri:
+- `posts` - Blog yazıları listesi
+- `post:${slug}` - Belirli bir blog yazısı  
+- `matches` - Maçlar listesi
+- `teams` - Takımlar listesi
+- `team:${slug}` - Belirli bir takım
+- `players` - Oyuncular listesi
+- `team:${slug}:players` - Bir takımın oyuncuları
+- `boardMembers` - Yönetim kurulu
+- `staff` - Teknik ekip
+- `hazirlik-gruplari` - Hazırlık grupları
+- `jerseys` - Formalar
+- `stats` - Kulüp istatistikleri
+- `about` - Hakkında sayfası
+- `home` - Ana sayfa
+
+### ⚡ Performans
+
+- **Public kullanıcılar**: Cache'lenmiş sayfalar = anında yükleme
+- **Staff**: Preview mode = taslak içerikleri anında görme
+- **Yayınlanma**: Webhook = anında güncelleme (1-2 saniye)
+
 ## 📞 İletişim
 
 - **Adres**: Bahçeköy Merkez, Orman Fakültesi No:2, 34473 Sarıyer/İstanbul

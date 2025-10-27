@@ -18,7 +18,7 @@ export const revalidate = 60;
 
 async function getBoardMembers() {
   try {
-    const members = await fetchWithRetry<any[]>(queries.boardMembers);
+    const members = await fetchWithRetry<any[]>(queries.boardMembers, {}, 2, ['boardMembers']);
     return members || [];
   } catch (error) {
     console.error('Error fetching board members:', error);

@@ -20,7 +20,9 @@ interface BlogPostPageProps {
 
 async function getPostBySlug(slug: string) {
   try {
-    const post = await client.fetch(queries.postBySlug, { slug });
+    const post = await client.fetch(queries.postBySlug, { slug }, {
+      next: { tags: ['posts', `post:${slug}`] }
+    });
     return post;
   } catch (error) {
     console.error('Error fetching post:', error);

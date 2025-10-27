@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,21 +8,22 @@ export async function GET(request: NextRequest) {
 
     // Verify secret
     if (secret !== process.env.REVALIDATE_SECRET) {
-      return NextResponse.json({ message: 'Invalid secret' }, { status: 401 })
+      return NextResponse.json({ ok: false, error: 'Invalid secret' }, { status: 401 })
     }
 
     // Revalidate the specified path
     revalidatePath(path)
 
     return NextResponse.json({ 
-      revalidated: true, 
+      ok: true,
+      revalidated: [`path:${path}`],
       now: Date.now(),
       path
     })
   } catch (error) {
     console.error('Revalidation error:', error)
     return NextResponse.json(
-      { error: 'Error revalidating' },
+      { ok: false, error: 'Error revalidating' },
       { status: 500 }
     )
   }
@@ -30,80 +31,92 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { secret, type, slug } = await request.json()
-
-    // Verify secret
+    // Check secret from header or query params
+    const secret = request.headers.get('x-revalidate-secret') || 
+                   request.nextUrl.searchParams.get('secret')
+    
     if (secret !== process.env.REVALIDATE_SECRET) {
-      return NextResponse.json({ message: 'Invalid secret' }, { status: 401 })
+      return NextResponse.json({ ok: false, error: 'Invalid secret' }, { status: 401 })
     }
 
-    // Revalidate based on type
-    switch (type) {
-      case 'post':
-        if (slug) {
-          // Revalidate specific blog post
-          revalidatePath(`/blog/${slug}`)
-          revalidatePath('/blog')
-        } else {
-          // Revalidate blog index
-          revalidatePath('/blog')
-        }
-        break
+    // Try to parse Sanity webhook body
+    const body = await request.json().catch(() => ({} as any))
+    
+    // Extract document from different webhook formats
+    const doc = body?.body?.current ?? body?.document ?? body?.document?._id ? body?.document : body
+    
+    const type = doc?._type || body?.type
+    const slug = doc?.slug?.current ?? doc?.slug ?? body?.slug
+    const _id = doc?._id
 
-      case 'match':
-        if (slug) {
-          // Revalidate specific match (if we had match detail pages)
-          revalidatePath(`/matches/${slug}`)
-        }
-        // Always revalidate home page sections and matches page
-        revalidatePath('/')
-        revalidatePath('/maclar')
-        break
+    const touched: string[] = []
 
-      case 'player':
-        // Revalidate team pages and home page
-        revalidatePath('/takimlarimiz')
-        revalidatePath('/takimlarimiz/[slug]', 'page')
-        break
+    const hitPath = (p: string, type?: 'page' | 'layout') => { 
+      revalidatePath(p, type)
+      touched.push(`path:${p}`) 
+    }
+    
+    console.log('Revalidating:', { type, slug, _id })
 
-      case 'boardMember':
-        // Revalidate about pages
-        revalidatePath('/yonetim-kurulu')
-        break
-
-      case 'hazirlikGrupuResim':
-        // Revalidate hazirlik groups page
-        revalidatePath('/hazirlik-gruplari')
-        break
-
-      case 'jersey':
-        // Revalidate kulup-hakkinda page
-        revalidatePath('/kulup-hakkinda')
-        break
-
-      case 'clubStats':
-        // Stats affect hero and about page
-        revalidatePath('/')
-        revalidatePath('/kulup-hakkinda')
-        break
-
-      default:
-        // General revalidation
-        revalidatePath('/')
-        revalidatePath('/blog')
-        revalidatePath('/takimlarimiz')
+    // Handle different document types - revalidate paths and related pages
+    if (type === 'post') {
+      if (slug) {
+        hitPath(`/blog/${slug}`)
+      }
+      hitPath('/blog')
+      hitPath('/')
+    } 
+    else if (type === 'match') {
+      hitPath('/maclar')
+      hitPath('/')
+    }
+    else if (type === 'player') {
+      hitPath('/takimlarimiz')
+      if (doc?.teamTag?.slug?.current) {
+        hitPath(`/takimlarimiz/${doc.teamTag.slug.current}`)
+      }
+    }
+    else if (type === 'boardMember') {
+      hitPath('/yonetim-kurulu')
+    }
+    else if (type === 'staff') {
+      hitPath('/teknik-ekip')
+    }
+    else if (type === 'team') {
+      if (slug) {
+        hitPath(`/takimlarimiz/${slug}`)
+      }
+      hitPath('/takimlarimiz')
+    }
+    else if (type === 'hazirlikGrupuResim') {
+      hitPath('/hazirlik-gruplari')
+    }
+    else if (type === 'jersey') {
+      hitPath('/kulup-hakkinda')
+    }
+    else if (type === 'clubStats') {
+      hitPath('/')
+      hitPath('/kulup-hakkinda')
+    }
+    else {
+      // General revalidation - invalidate all paths
+      hitPath('/')
+      hitPath('/blog')
+      hitPath('/maclar')
+      hitPath('/takimlarimiz')
     }
 
     return NextResponse.json({ 
-      revalidated: true, 
-      now: Date.now(),
+      ok: true, 
+      revalidated: touched,
       type,
-      slug: slug || 'all'
+      slug: slug || null,
+      _id: _id || null
     })
   } catch (error) {
     console.error('Revalidation error:', error)
     return NextResponse.json(
-      { error: 'Error revalidating' },
+      { ok: false, error: 'Error revalidating' },
       { status: 500 }
     )
   }

@@ -10,7 +10,7 @@ export const revalidate = 600;
 
 async function getLatestMatch() {
   try {
-    const match = await fetchWithRetry<any>(queries.latestMatch);
+    const match = await fetchWithRetry<any>(queries.latestMatch, {}, 2, ['matches', 'home']);
     return match;
   } catch (error) {
     console.error('Error fetching latest match:', error);
@@ -21,8 +21,8 @@ async function getLatestMatch() {
 async function getHomepageMatches() {
   try {
     const [upcoming, past] = await Promise.all([
-      fetchWithRetry<any[]>(queries.homepageUpcomingMatches),
-      fetchWithRetry<any[]>(queries.homepagePastMatches)
+      fetchWithRetry<any[]>(queries.homepageUpcomingMatches, {}, 2, ['matches', 'home']),
+      fetchWithRetry<any[]>(queries.homepagePastMatches, {}, 2, ['matches', 'home'])
     ])
     return { upcoming: upcoming || [], past: past || [] }
   } catch (error) {

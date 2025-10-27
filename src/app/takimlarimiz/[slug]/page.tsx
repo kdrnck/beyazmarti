@@ -26,7 +26,9 @@ interface PageProps {
 async function getTeamBySlug(slug: string) {
   try {
     console.log('Looking for team with slug:', slug);
-    const team = await client.fetch(queries.teamBySlug, { slug });
+    const team = await client.fetch(queries.teamBySlug, { slug }, {
+      next: { tags: ['teams', `team:${slug}`] }
+    });
     console.log('Found team:', team);
     return team;
   } catch (error) {
@@ -38,7 +40,9 @@ async function getTeamBySlug(slug: string) {
 async function getPlayersByTeam(teamSlug: string) {
   try {
     console.log('Fetching players for team slug:', teamSlug);
-    const players = await client.fetch(queries.playersByTeam, { teamSlug });
+    const players = await client.fetch(queries.playersByTeam, { teamSlug }, {
+      next: { tags: ['players', `team:${teamSlug}:players`] }
+    });
     console.log('Players found:', players);
     return players || [];
   } catch (error) {

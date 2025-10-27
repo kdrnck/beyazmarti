@@ -17,7 +17,9 @@ export const revalidate = 600;
 
 async function getMatches() {
   try {
-    const matches = await client.fetch(queries.allMatches);
+    const matches = await client.fetch(queries.allMatches, {}, {
+      next: { tags: ['matches'] }
+    });
     return matches || [];
   } catch (error) {
     console.error('Error fetching matches:', error);
