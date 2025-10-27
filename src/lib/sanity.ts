@@ -1,39 +1,8 @@
 import { createClient } from 'next-sanity'
 import imageUrlBuilder from '@sanity/image-url'
-import { draftMode } from 'next/headers'
-import { headers } from 'next/headers'
 
-// Create client based on context (preview mode, warm-up, or public)
-async function createContextualClient() {
-  const h = headers()
-  const dm = draftMode()
-  const [headersData, draftData] = await Promise.all([h, dm])
-  const isWarm = headersData.get('x-warm') === '1'
-  const isPreview = draftData.isEnabled
-  
-  const useCdn = !(isPreview || isWarm)
-  const perspective = isPreview ? 'previewDrafts' : 'published'
-  const token = isPreview ? process.env.SANITY_API_READ_TOKEN : undefined
-  
-  return createClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-    apiVersion: '2024-01-01',
-    useCdn,
-    perspective,
-    token,
-    stega: {
-      enabled: isPreview,
-    },
-  })
-}
-
-// Get client instance (respects preview mode and warm-up)
-export async function getClient() {
-  return createContextualClient()
-}
-
-// Default export for backward compatibility (uses published data)
+// Public client for general use (always uses published data)
+// This is safe to use in both Server and Client Components
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
@@ -55,7 +24,6 @@ export async function fetchWithRetry<T>(
   attempts = 2,
   tags?: string[]
 ): Promise<T> {
-  const client = await getClient()
   let lastError: any
   for (let i = 0; i < attempts; i++) {
     try {
