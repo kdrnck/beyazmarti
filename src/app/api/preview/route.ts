@@ -12,7 +12,8 @@ export async function GET(request: NextRequest) {
   }
 
   // Enable draft mode
-  draftMode().enable()
+  const dm = await draftMode()
+  dm.enable()
 
   // Redirect to preview page
   redirect(`${path}?preview=1`)
