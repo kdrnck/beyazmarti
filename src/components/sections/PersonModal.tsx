@@ -21,7 +21,7 @@ interface PersonModalProps {
 export function PersonModal({ person, isOpen, onClose }: PersonModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-background/95 border border-surface/30 backdrop-blur-xl text-text">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-background/95 border border-surface/30 backdrop-blur-xl text-text">
         <DialogHeader>
           <DialogTitle className="text-text text-2xl font-bold text-center">{person.name}</DialogTitle>
         </DialogHeader>
@@ -62,7 +62,7 @@ export function PersonModal({ person, isOpen, onClose }: PersonModalProps) {
               {person.bio && (
                 <div className="mt-6 pt-4 border-t border-surface/20 text-center">
                   <h4 className="text-sm font-medium text-gray-400 mb-2">Biyografi</h4>
-                  <p className="text-text leading-relaxed">{person.bio}</p>
+                  <p className="text-text leading-relaxed whitespace-pre-wrap">{person.bio}</p>
                 </div>
               )}
             </CardContent>

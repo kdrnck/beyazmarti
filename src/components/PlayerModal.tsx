@@ -12,7 +12,7 @@ interface PlayerModalProps {
     name: string;
     position?: string;
     number?: number;
-    age?: number;
+    birthYear?: string;
     bio?: string;
     photo?: {
       asset?: {
@@ -24,6 +24,14 @@ interface PlayerModalProps {
   };
   isOpen: boolean;
   onClose: () => void;
+}
+
+// Calculate age from birth year
+function calculateAge(birthYear?: string): number | null {
+  if (!birthYear) return null;
+  const year = parseInt(birthYear);
+  if (isNaN(year)) return null;
+  return new Date().getFullYear() - year;
 }
 
 export function PlayerModal({ player, isOpen, onClose }: PlayerModalProps) {
@@ -72,12 +80,15 @@ export function PlayerModal({ player, isOpen, onClose }: PlayerModalProps) {
                   </div>
                 )}
                 
-                {player.age && (
-                  <div className="text-center">
-                    <h4 className="text-sm font-medium text-gray-400 mb-1">Yaş</h4>
-                    <p className="text-text font-semibold">{player.age}</p>
-                  </div>
-                )}
+                {(() => {
+                  const age = calculateAge(player.birthYear);
+                  return age !== null && (
+                    <div className="text-center">
+                      <h4 className="text-sm font-medium text-gray-400 mb-1">Yaş</h4>
+                      <p className="text-text font-semibold">{age}</p>
+                    </div>
+                  );
+                })()}
               </div>
 
               {player.bio && (

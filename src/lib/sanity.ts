@@ -129,7 +129,7 @@ export const queries = {
     name,
     position,
     number,
-    age,
+    birthYear,
     bio,
     teamTag->{
       _id,
@@ -150,7 +150,7 @@ export const queries = {
     name,
     position,
     number,
-    age,
+    birthYear,
     teamTag,
     photo{
       asset->{

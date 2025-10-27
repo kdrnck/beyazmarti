@@ -11,7 +11,7 @@ interface Player {
   name: string;
   position?: string;
   number?: number;
-  age?: number;
+  birthYear?: string;
   bio?: string;
   photo?: {
     asset?: {
@@ -20,6 +20,14 @@ interface Player {
     };
     alt?: string;
   };
+}
+
+// Calculate age from birth year
+function calculateAge(birthYear?: string): number | null {
+  if (!birthYear) return null;
+  const year = parseInt(birthYear);
+  if (isNaN(year)) return null;
+  return new Date().getFullYear() - year;
 }
 
 interface PlayersListProps {
@@ -89,11 +97,14 @@ export function PlayersList({ players }: PlayersListProps) {
                         {player.position}
                       </div>
                     )}
-                    {player.age && (
-                      <div className="px-3 py-1 bg-gradient-to-r from-accent to-accent/80 text-white text-sm rounded-full font-medium inline-block">
-                        {player.age} yaş
-                      </div>
-                    )}
+                    {(() => {
+                      const age = calculateAge(player.birthYear);
+                      return age !== null && (
+                        <div className="px-3 py-1 bg-gradient-to-r from-accent to-accent/80 text-white text-sm rounded-full font-medium inline-block">
+                          {age} yaş
+                        </div>
+                      );
+                    })()}
                     {player.bio && (
                       <div className="mt-3 text-sm text-gray-400 underline decoration-dotted">Biyografiyi görmek için tıkla</div>
                     )}

@@ -55,21 +55,16 @@ Beyaz Martı Spor Kulübü, 2015 yılında kurulmuş ve voleybol branşında faa
 - **Sanity CMS**: Headless content management
 - **Vercel**: Hosting ve deployment
 
-## 🔄 Anında Güncelleme Sistemi (ISR + On-Demand Revalidation + Preview)
+## 🔄 Anında Güncelleme Sistemi (ISR + Warm Cache Revalidation)
 
-Bu proje, içerik yayınlandıktan hemen sonra sitede anında güncelleme görünmesi için **ISR (Incremental Static Regeneration)**, **on-demand revalidation** ve **preview mode** kullanmaktadır.
+Bu proje, içerik yayınlandıktan hemen sonra sitede güncel verinin görünmesi için **ISR (Incremental Static Regeneration)** ve **warm cache revalidation** kullanmaktadır.
 
 ### Nasıl Çalışır?
 
-**Halka Açık Sayfalar (Public):**
+**Halka Açık Sayfalar:**
 - Sayfalar cache'lenmiş olarak servis edilir (hızlı yüklenme)
 - Her 60 saniyede otomatik yenilenir (ISR fallback)
-- Sanity webhook tetiklendiğinde ilgili cache anında temizlenir
-
-**Yönetici Önizleme (Staff Preview):**
-- Staff preview modunda taslak içerikleri anında görür
-- Public cache'i etkilemeden çalışır
-- Sanity Studio'dan direkt önizleme açılabilir
+- Sanity webhook tetiklendiğinde ilgili cache anında temizlenir ve warm-up yapılır (3-5 saniye)
 
 ### 🔗 Sanity Webhook Kurulumu
 
@@ -101,18 +96,6 @@ SANITY_API_READ_TOKEN=<your-read-token>
 # Sanity Project Bilgileri
 NEXT_PUBLIC_SANITY_PROJECT_ID=<your-project-id>
 NEXT_PUBLIC_SANITY_DATASET=production
-```
-
-### 👁️ Preview Mode Kullanımı
-
-**Önizlemeyi Aç:**
-```
-https://your-domain.vercel.app/api/preview?secret=<PREVIEW_SECRET>&path=/blog/yazi-slug
-```
-
-**Önizlemeyi Kapat:**
-```
-https://your-domain.vercel.app/api/preview/disable
 ```
 
 ### 🔄 Manuel Revalidation

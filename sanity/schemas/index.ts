@@ -216,10 +216,14 @@ export const player = defineType({
       validation: (Rule) => Rule.min(1).max(99),
     }),
     defineField({
-      name: 'age',
-      title: 'Yaş',
-      type: 'number',
-      validation: (Rule) => Rule.min(8).max(25),
+      name: 'birthYear',
+      title: 'Doğum Yılı',
+      type: 'string',
+      placeholder: 'Örn: 2010',
+      description: 'Oyuncunun doğum yılı (otomatik hesaplanır)',
+      validation: (Rule) => Rule.required().regex(/^\d{4}$/, {
+        error: 'Doğum yılı 4 haneli olmalıdır (Örn: 2010)',
+      }),
     }),
     defineField({
       name: 'photo',
