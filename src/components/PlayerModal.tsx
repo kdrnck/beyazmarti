@@ -26,14 +26,6 @@ interface PlayerModalProps {
   onClose: () => void;
 }
 
-// Calculate age from birth year
-function calculateAge(birthYear?: string): number | null {
-  if (!birthYear) return null;
-  const year = parseInt(birthYear);
-  if (isNaN(year)) return null;
-  return new Date().getFullYear() - year;
-}
-
 export function PlayerModal({ player, isOpen, onClose }: PlayerModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -80,15 +72,12 @@ export function PlayerModal({ player, isOpen, onClose }: PlayerModalProps) {
                   </div>
                 )}
                 
-                {(() => {
-                  const age = calculateAge(player.birthYear);
-                  return age !== null && (
-                    <div className="text-center">
-                      <h4 className="text-sm font-medium text-gray-400 mb-1">Yaş</h4>
-                      <p className="text-text font-semibold">{age}</p>
-                    </div>
-                  );
-                })()}
+                {player.birthYear && (
+                  <div className="text-center">
+                    <h4 className="text-sm font-medium text-gray-400 mb-1">Doğum Yılı</h4>
+                    <p className="text-text font-semibold">{player.birthYear}</p>
+                  </div>
+                )}
               </div>
 
               {player.bio && (
