@@ -118,6 +118,9 @@ export async function POST(request: NextRequest) {
       hitPath('/')
       hitPath('/kulup-hakkinda')
     }
+    else if (type === 'popup') {
+      hitPath('/')
+    }
     else {
       // General revalidation - invalidate all paths
       hitPath('/')

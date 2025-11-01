@@ -162,11 +162,12 @@ export const queries = {
   }`,
   
   // Board members
-  boardMembers: `*[_type == "boardMember"] | order(order asc) {
+  boardMembers: `*[_type == "boardMember"] | order(row asc, order asc) {
     _id,
     name,
     role,
     bio,
+    row,
     photo{
       asset->{
         _id,
@@ -362,13 +363,14 @@ export const queries = {
   }`,
 
   // Staff
-  staff: `*[_type == "staff" && isActive == true] | order(order asc) {
+  staff: `*[_type == "staff" && isActive == true] | order(section asc, order asc) {
     _id,
     name,
     role,
     bio,
     experience,
     certifications,
+    section,
     photo{
       asset->{
         _id,
@@ -412,5 +414,23 @@ export const queries = {
       },
       alt
     }
+  }`,
+
+  // Pop-up
+  activePopup: `*[_type == "popup" && isActive == true][0] {
+    _id,
+    title,
+    content[]{
+      ...,
+      _type == "image" => {
+        asset->{
+          _id,
+          url
+        },
+        alt
+      }
+    },
+    buttonText,
+    buttonLink
   }`,
 }

@@ -49,6 +49,12 @@ export default defineConfig({
             S.listItem()
               .title('Görseller')
               .child(S.documentTypeList('imageAsset').title('Görsel Varlıkları')),
+            S.listItem()
+              .title('Kulüp İstatistikleri')
+              .child(S.documentTypeList('clubStats').title('Kulüp İstatistikleri')),
+            S.listItem()
+              .title('Pop-up')
+              .child(S.documentTypeList('popup').title('Pop-up')),
           ]),
     }),
     visionTool(),

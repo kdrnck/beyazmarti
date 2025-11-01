@@ -13,7 +13,7 @@ const config: Config = {
           DEFAULT: "#243B9F",
           dark: "#1B2C78",
         },
-        accent: "#D32F2F",
+        accent: "#9F0000",
         background: "#0B1020",
         surface: "#F8FAFC",
         text: "#FFFFFF",

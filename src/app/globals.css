@@ -6,7 +6,7 @@
   --foreground: #FFFFFF;
   --primary: #243B9F;
   --primary-dark: #1B2C78;
-  --accent: #D32F2F;
+  --accent: #9F0000;
   --surface: #F8FAFC;
   --font-inter: 'Inter', sans-serif;
   --font-manrope: 'Manrope', sans-serif;
@@ -31,4 +31,13 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-manrope), sans-serif;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

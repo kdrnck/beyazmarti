@@ -3,6 +3,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { Hero } from "@/components/sections/Hero";
 import { MatchCard } from "@/components/sections/MatchCard";
 import { LatestPosts } from "@/components/sections/LatestPosts";
+import { HomePopup } from "@/components/sections/HomePopup";
 import { client, queries, fetchWithRetry } from "@/lib/sanity";
 
 // Revalidate to keep homepage matches fresh
@@ -38,6 +39,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <HomePopup />
       <main>
         {/* Başlık/Hero */}
         <Hero latestMatch={latestMatch} showLatestMatch={false} />

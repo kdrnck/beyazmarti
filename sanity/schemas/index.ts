@@ -313,6 +313,19 @@ export const boardMember = defineType({
       type: 'number',
       initialValue: 0,
     }),
+    defineField({
+      name: 'row',
+      title: 'Satır',
+      type: 'string',
+      options: {
+        list: [
+          { title: '1. Satır (Asıl Yöneticiler)', value: '1' },
+          { title: '2. Satır (Yardımcılar)', value: '2' },
+        ],
+      },
+      initialValue: '1',
+      validation: (Rule) => Rule.required(),
+    }),
   ],
   preview: {
     select: {
@@ -703,6 +716,20 @@ export const staff = defineType({
       type: 'number',
       initialValue: 0,
     }),
+    defineField({
+      name: 'section',
+      title: 'Bölüm',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Baş Antrenör', value: 'bas-antrenor' },
+          { title: 'Koordinatör', value: 'koordinator' },
+          { title: 'Antrenör', value: 'antrenor' },
+          { title: 'Yardımcı Antrenör', value: 'yardimci-antrenor' },
+        ],
+      },
+      validation: (Rule) => Rule.required(),
+    }),
   ],
   preview: {
     select: {
@@ -871,6 +898,107 @@ export const clubStats = defineType({
   },
 })
 
+// Pop-up Schema
+export const popup = defineType({
+  name: 'popup',
+  title: 'Pop-up',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Başlık',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'content',
+      title: 'İçerik Metni',
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          styles: [
+            { title: 'Normal', value: 'normal' },
+            { title: 'Başlık 1', value: 'h1' },
+            { title: 'Başlık 2', value: 'h2' },
+            { title: 'Başlık 3', value: 'h3' },
+            { title: 'Alıntı', value: 'blockquote' },
+          ],
+          lists: [
+            { title: 'Madde İşareti', value: 'bullet' },
+            { title: 'Numara', value: 'number' },
+          ],
+          marks: {
+            decorators: [
+              { title: 'Kalın', value: 'strong' },
+              { title: 'İtalik', value: 'em' },
+            ],
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'Link',
+                fields: [
+                  {
+                    name: 'href',
+                    type: 'url',
+                    title: 'URL',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Alt Metin',
+              description: 'Görsel için açıklayıcı metin (SEO için önemli)',
+            },
+          ],
+        },
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'buttonText',
+      title: 'Buton Metni',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'buttonLink',
+      title: 'Buton Yönlendirme Sayfası',
+      type: 'string',
+      description: 'Örn: /blog, /iletisim, /takimlarimiz',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'isActive',
+      title: 'Aktif',
+      type: 'boolean',
+      initialValue: true,
+      description: 'Pop-up\'ı göster/gizle',
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      active: 'isActive',
+    },
+    prepare({ title, active }) {
+      return {
+        title: title || 'Pop-up',
+        subtitle: active ? 'Aktif' : 'Pasif',
+      }
+    },
+  },
+})
+
 // Export all schemas as an array
 export const schemaTypes = [
   post,
@@ -886,4 +1014,5 @@ export const schemaTypes = [
   jersey,
   hazirlikGrupuResim,
   clubStats,
+  popup,
 ]
