@@ -181,6 +181,11 @@ export const queries = {
   latestMatch: `*[_type == "match"] | order(date desc)[0] {
     _id,
     date,
+    team->{
+      _id,
+      name,
+      slug
+    },
     homeTeam->{
       name,
       logo{
@@ -217,6 +222,11 @@ export const queries = {
     date,
     status,
     showOnHomepage,
+    team->{
+      _id,
+      name,
+      slug
+    },
     homeTeam->{
       name,
       logo{
@@ -295,6 +305,11 @@ export const queries = {
     _id,
     date,
     venue,
+    team->{
+      _id,
+      name,
+      slug
+    },
     homeTeam->{
       name,
       logo{ asset->{ _id, url }, alt }
@@ -310,6 +325,11 @@ export const queries = {
     venue,
     result,
     set1, set2, set3, hasSet4, set4, hasSet5, set5,
+    team->{
+      _id,
+      name,
+      slug
+    },
     homeTeam->{
       name,
       logo{ asset->{ _id, url }, alt }

@@ -61,6 +61,7 @@ export default async function Home() {
                         venue={match.venue}
                         homeTeam={match.homeTeam}
                         awayTeam={match.awayTeam}
+                        team={match.team}
                         result={match.result}
                         sets={[match.set1, match.set2, match.set3, match.hasSet4 ? match.set4 : null, match.hasSet5 ? match.set5 : null].filter(Boolean)}
                       />
@@ -84,6 +85,7 @@ export default async function Home() {
                         venue={match.venue}
                         homeTeam={match.homeTeam}
                         awayTeam={match.awayTeam}
+                        team={match.team}
                       />
                     </div>
                   ))}

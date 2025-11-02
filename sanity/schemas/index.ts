@@ -390,6 +390,14 @@ export const match = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'team',
+      title: 'Grup/Takım',
+      type: 'reference',
+      to: { type: 'team' },
+      description: 'Bu maç hangi takım/grup için?',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'status',
       title: 'Maç Durumu',
       type: 'string',
