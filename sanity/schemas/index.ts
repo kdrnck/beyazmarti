@@ -1007,6 +1007,54 @@ export const popup = defineType({
   },
 })
 
+export const clubAnthem = defineType({
+  name: 'clubAnthem',
+  title: 'Takım Marşı',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Başlık',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'description',
+      title: 'Açıklama',
+      type: 'text',
+      rows: 3,
+    }),
+    defineField({
+      name: 'audioFile',
+      title: 'Marş Dosyası',
+      type: 'file',
+      options: {
+        accept: 'audio/*',
+      },
+      fields: [
+        defineField({
+          name: 'credit',
+          title: 'Kaynak / Not',
+          type: 'string',
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      description: 'description',
+    },
+    prepare({ title, description }) {
+      return {
+        title: title || 'Takım Marşı',
+        subtitle: description ? description.slice(0, 60) : undefined,
+      }
+    },
+  },
+})
+
 // Export all schemas as an array
 export const schemaTypes = [
   post,
@@ -1023,4 +1071,5 @@ export const schemaTypes = [
   hazirlikGrupuResim,
   clubStats,
   popup,
+  clubAnthem,
 ]

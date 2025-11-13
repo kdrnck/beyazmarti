@@ -453,4 +453,19 @@ export const queries = {
     buttonText,
     buttonLink
   }`,
+
+  clubAnthem: `*[_type == "clubAnthem"][0]{
+    _id,
+    title,
+    description,
+    audioFile{
+      asset->{
+        _id,
+        url,
+        originalFilename,
+        mimeType
+      },
+      credit
+    }
+  }`,
 }

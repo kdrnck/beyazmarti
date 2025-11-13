@@ -30,12 +30,12 @@ export default defineConfig({
             S.listItem()
               .title('Oyuncular')
               .child(S.documentTypeList('player').title('Oyuncular')),
-                S.listItem()
-                  .title('Yönetim Kurulu')
-                  .child(S.documentTypeList('boardMember').title('Yönetim Kurulu Üyeleri')),
-                S.listItem()
-                  .title('Teknik Ekip')
-                  .child(S.documentTypeList('staff').title('Teknik Ekip Üyeleri')),
+            S.listItem()
+              .title('Yönetim Kurulu')
+              .child(S.documentTypeList('boardMember').title('Yönetim Kurulu Üyeleri')),
+            S.listItem()
+              .title('Teknik Ekip')
+              .child(S.documentTypeList('staff').title('Teknik Ekip Üyeleri')),
             S.listItem()
               .title('Rakip Takımlar')
               .child(S.documentTypeList('opponentTeam').title('Rakip Takımlar')),
@@ -52,6 +52,14 @@ export default defineConfig({
             S.listItem()
               .title('Kulüp İstatistikleri')
               .child(S.documentTypeList('clubStats').title('Kulüp İstatistikleri')),
+            S.listItem()
+              .title('Takım Marşı')
+              .child(
+                S.document()
+                  .schemaType('clubAnthem')
+                  .documentId('club-anthem')
+                  .title('Takım Marşı')
+              ),
             S.listItem()
               .title('Pop-up')
               .child(S.documentTypeList('popup').title('Pop-up')),

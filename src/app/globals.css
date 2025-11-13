@@ -50,3 +50,89 @@ h1, h2, h3, h4, h5, h6 {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Dialog z-index fix for anthem modal */
+[data-radix-popper-content-wrapper] {
+  z-index: 100 !important;
+}
+
+/* Custom Audio Player Styles */
+.anthem-player {
+  height: 40px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.anthem-player:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.anthem-player::-webkit-media-controls-panel {
+  background: transparent;
+}
+
+.anthem-player::-webkit-media-controls-play-button,
+.anthem-player::-webkit-media-controls-pause-button {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  margin-left: 6px;
+  transition: all 0.2s ease;
+}
+
+.anthem-player::-webkit-media-controls-play-button:hover,
+.anthem-player::-webkit-media-controls-pause-button:hover {
+  background-color: rgba(255, 255, 255, 1);
+  transform: scale(1.05);
+}
+
+.anthem-player::-webkit-media-controls-current-time-display,
+.anthem-player::-webkit-media-controls-time-remaining-display {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.anthem-player::-webkit-media-controls-timeline {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  margin: 0 8px;
+  height: 4px;
+}
+
+.anthem-player::-webkit-media-controls-volume-slider {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  height: 4px;
+}
+
+.anthem-player::-webkit-media-controls-mute-button {
+  background-color: transparent;
+  filter: invert(1);
+  opacity: 0.9;
+}
+
+.anthem-player::-webkit-media-controls-mute-button:hover {
+  opacity: 1;
+}
+
+/* Firefox */
+.anthem-player::-moz-range-track {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  height: 4px;
+}
+
+.anthem-player::-moz-range-thumb {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+}

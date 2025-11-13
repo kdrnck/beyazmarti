@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Award, Star } from "lucide-react";
 import Image from "next/image";
@@ -30,6 +30,8 @@ export function StaffGrid({ staff }: { staff: StaffMember[] }) {
   const [selected, setSelected] = useState<StaffMember | null>(null);
   const [open, setOpen] = useState(false);
   const pauseStates = useRef<Record<string, boolean>>({});
+  const intervalRefs = useRef<Record<string, NodeJS.Timeout | null>>({});
+  const resumeTimeoutRefs = useRef<Record<string, NodeJS.Timeout | null>>({});
 
   const onClick = (m: StaffMember) => {
     setSelected(m);
@@ -37,45 +39,76 @@ export function StaffGrid({ staff }: { staff: StaffMember[] }) {
   };
 
   // Group staff by section
-  const staffBySection = sectionOrder.reduce((acc, section) => {
-    acc[section] = staff.filter(s => s.section === section);
-    return acc;
-  }, {} as Record<string, StaffMember[]>);
+  const staffBySection = useMemo(() => {
+    return sectionOrder.reduce((acc, section) => {
+      acc[section] = staff.filter((s) => s.section === section);
+      return acc;
+    }, {} as Record<string, StaffMember[]>);
+  }, [staff]);
+
+  const clearAutoScroll = useCallback((section: string) => {
+    const interval = intervalRefs.current[section];
+    if (interval) {
+      clearInterval(interval);
+      intervalRefs.current[section] = null;
+    }
+  }, []);
+
+  const clearResumeTimeout = useCallback((section: string) => {
+    const timeout = resumeTimeoutRefs.current[section];
+    if (timeout) {
+      clearTimeout(timeout);
+      resumeTimeoutRefs.current[section] = null;
+    }
+  }, []);
+
+  const startAutoScroll = useCallback((section: string) => {
+    const members = staffBySection[section];
+    if (!members || members.length <= 1) return;
+
+    const scrollContainer = document.getElementById(`staff-carousel-${section}`);
+    if (!scrollContainer) return;
+
+    clearAutoScroll(section);
+
+    const scroll = () => {
+      if (pauseStates.current[section]) {
+        return;
+      }
+
+      if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth - scrollContainer.clientWidth - 10) {
+        scrollContainer.scrollLeft = 0;
+      } else {
+        scrollContainer.scrollLeft += 0.5;
+      }
+    };
+
+    intervalRefs.current[section] = setInterval(scroll, 50);
+  }, [clearAutoScroll, staffBySection]);
 
   // Auto-scroll for mobile carousels
   useEffect(() => {
-    const intervals: NodeJS.Timeout[] = [];
+    sectionOrder.forEach((section) => startAutoScroll(section));
 
-    sectionOrder.forEach((section) => {
-      const members = staffBySection[section];
-      if (!members || members.length === 0 || members.length === 1) return;
+    return () => {
+      sectionOrder.forEach((section) => clearAutoScroll(section));
+      sectionOrder.forEach((section) => clearResumeTimeout(section));
+    };
+  }, [clearAutoScroll, clearResumeTimeout, startAutoScroll]);
 
-      const scrollContainer = document.getElementById(`staff-carousel-${section}`);
-      if (!scrollContainer || pauseStates.current[section]) return;
-
-      const scroll = () => {
-        if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth - scrollContainer.clientWidth - 10) {
-          scrollContainer.scrollLeft = 0;
-        } else {
-          scrollContainer.scrollLeft += 0.5;
-        }
-      };
-
-      const interval = setInterval(scroll, 50);
-      intervals.push(interval);
-    });
-
-    return () => intervals.forEach(interval => clearInterval(interval));
-  }, [staffBySection]);
-
-  const handleTouchStart = (section: string) => {
+  const handleInteractionStart = (section: string) => {
     pauseStates.current[section] = true;
+    clearAutoScroll(section);
+    clearResumeTimeout(section);
   };
 
-  const handleTouchEnd = (section: string) => {
-    setTimeout(() => {
+  const handleInteractionEnd = (section: string) => {
+    clearResumeTimeout(section);
+    resumeTimeoutRefs.current[section] = setTimeout(() => {
       pauseStates.current[section] = false;
-    }, 2000);
+      startAutoScroll(section);
+      resumeTimeoutRefs.current[section] = null;
+    }, 3000);
   };
 
   const StaffCard = ({ member }: { member: StaffMember }) => (
@@ -147,8 +180,16 @@ export function StaffGrid({ staff }: { staff: StaffMember[] }) {
               <div 
                 id={`staff-carousel-${section}`}
                 className="md:hidden flex gap-6 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4"
-                onTouchStart={() => handleTouchStart(section)}
-                onTouchEnd={() => handleTouchEnd(section)}
+                onTouchStart={() => handleInteractionStart(section)}
+                onTouchEnd={() => handleInteractionEnd(section)}
+                onPointerDown={() => handleInteractionStart(section)}
+                onPointerUp={() => handleInteractionEnd(section)}
+                onPointerCancel={() => handleInteractionEnd(section)}
+                onPointerLeave={() => handleInteractionEnd(section)}
+                onWheel={() => {
+                  handleInteractionStart(section);
+                  handleInteractionEnd(section);
+                }}
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
                 {members.map((member) => (
