@@ -121,6 +121,11 @@ export async function POST(request: NextRequest) {
     else if (type === 'popup') {
       hitPath('/')
     }
+    else if (type === 'clubAnthem') {
+      // Revalidate navbar (all pages) and about page
+      hitPath('/', 'layout')
+      hitPath('/kulup-hakkinda')
+    }
     else {
       // General revalidation - invalidate all paths
       hitPath('/')

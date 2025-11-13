@@ -6,7 +6,7 @@ import { LatestPosts } from "@/components/sections/LatestPosts";
 import { HomePopup } from "@/components/sections/HomePopup";
 import { client, queries, fetchWithRetry } from "@/lib/sanity";
 
-// Revalidate to keep homepage matches fresh
+// Cache for 10 minutes, revalidate via webhook when content changes
 export const revalidate = 600;
 
 async function getLatestMatch() {

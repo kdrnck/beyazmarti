@@ -5,6 +5,7 @@ import { Section } from "@/components/sections/Section";
 import { Trophy, Target, Users, Heart } from "lucide-react";
 import { client, queries } from "@/lib/sanity";
 import Image from "next/image";
+import { AnthemSection } from "@/components/sections/AnthemSection";
 
 export const metadata = {
   title: "Kulüp Hakkında - Beyaz Martı Spor Kulübü",
@@ -318,6 +319,9 @@ Amacımız, her yaşta gelişen sporcularımızın hem sahada hem de yaşamları
           </div>
         </Section>
       )}
+
+      {/* Marşımız Bölümü */}
+      <AnthemSection />
 
       <SiteFooter />
     </div>

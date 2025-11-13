@@ -27,11 +27,7 @@ export function HomePopup() {
         const data = await fetchWithRetry<PopupData | null>(queries.activePopup, {}, 2, ['popup', 'home']);
         if (data) {
           setPopup(data);
-          // Check if user has already dismissed this popup (using localStorage with popup ID)
-          const dismissedPopupId = localStorage.getItem('dismissedPopupId');
-          if (dismissedPopupId !== data._id) {
-            setIsOpen(true);
-          }
+          setIsOpen(true);
         }
       } catch (error) {
         console.error('Error fetching popup:', error);
@@ -42,10 +38,6 @@ export function HomePopup() {
 
   const handleClose = () => {
     setIsOpen(false);
-    if (popup) {
-      // Store dismissed popup ID in localStorage
-      localStorage.setItem('dismissedPopupId', popup._id);
-    }
   };
 
   if (!popup) {
@@ -135,11 +127,10 @@ export function HomePopup() {
             </Button>
             
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={handleClose}
-              className="text-gray-400 hover:text-text"
+              className="w-full text-text border-surface/30 hover:bg-surface/10"
             >
-              <X className="h-4 w-4 mr-2" />
               Kapat
             </Button>
           </div>

@@ -11,7 +11,7 @@ export const metadata = {
   description: "Beyaz Martı Spor Kulübü maç sonuçları ve programı.",
 };
 
-// Revalidate to keep matches fresh
+// Cache for 10 minutes, revalidate via webhook when matches change
 export const revalidate = 600;
 
 // Helper function to get set results
