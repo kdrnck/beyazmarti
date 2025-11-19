@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { MatchCard, Match } from "./MatchCard";
+import { throttle } from "@/lib/utils";
 
 export type MatchesSwiperProps = {
   upcoming: Match[];
@@ -139,27 +140,30 @@ export function MatchesSwiper({
   }, [activeTab, scrollToPane]);
 
   // Handle scroll event (fallback for manual scrolling)
-  const handleScroll = useCallback(() => {
-    if (!scrollContainerRef.current || isScrollingRef.current) return;
+  const handleScroll = useCallback(
+    throttle(() => {
+      if (!scrollContainerRef.current || isScrollingRef.current) return;
 
-    const container = scrollContainerRef.current;
-    const scrollLeft = container.scrollLeft;
-    const containerWidth = container.clientWidth;
-    const scrollRatio = scrollLeft / containerWidth;
+      const container = scrollContainerRef.current;
+      const scrollLeft = container.scrollLeft;
+      const containerWidth = container.clientWidth;
+      const scrollRatio = scrollLeft / containerWidth;
 
-    // Determine active pane based on scroll position
-    if (scrollRatio < 0.5) {
-      if (activeTab !== 'upcoming') {
-        setActiveTab('upcoming');
-        onTabChange?.('upcoming');
+      // Determine active pane based on scroll position
+      if (scrollRatio < 0.5) {
+        if (activeTab !== 'upcoming') {
+          setActiveTab('upcoming');
+          onTabChange?.('upcoming');
+        }
+      } else {
+        if (activeTab !== 'past') {
+          setActiveTab('past');
+          onTabChange?.('past');
+        }
       }
-    } else {
-      if (activeTab !== 'past') {
-        setActiveTab('past');
-        onTabChange?.('past');
-      }
-    }
-  }, [activeTab, onTabChange]);
+    }, 100),
+    [activeTab, onTabChange]
+  );
 
   return (
     <div className="w-full">
@@ -258,4 +262,3 @@ export function MatchesSwiper({
     </div>
   );
 }
-

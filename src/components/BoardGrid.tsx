@@ -11,7 +11,7 @@ interface BoardMember {
   name: string;
   role?: string;
   bio?: string;
-  row?: string;
+  position?: string;
   photo?: { asset?: { url: string }, alt?: string };
 }
 
@@ -25,10 +25,30 @@ export function BoardGrid({ members }: { members: BoardMember[] }) {
 
   const onClick = (m: BoardMember) => { setSelected(m); setOpen(true); };
 
-  // Row 1: Asıl Yöneticiler
-  const row1Members = members.filter(m => m.row === '1');
-  // Row 2: Yardımcılar
-  const row2Members = members.filter(m => m.row === '2');
+  // Pozisyon sıralaması: Başkan > Başkan Yardımcısı > Sekreter > Sayman > Şube Sorumlusu
+  const positionOrder: { [key: string]: number } = {
+    'baskan': 1,
+    'baskan-yardimcisi': 2,
+    'sekreter': 3,
+    'sayman': 4,
+    'sube-sorumlusu': 5,
+  };
+
+  // Pozisyona göre sıralı üyeler
+  const sortedMembers = [...members].sort((a, b) => {
+    const orderA = positionOrder[a.position || ''] || 999;
+    const orderB = positionOrder[b.position || ''] || 999;
+    return orderA - orderB;
+  });
+
+  // Row 1: Üst Düzey Yöneticiler (Başkan, Başkan Yardımcısı)
+  const row1Members = sortedMembers.filter(m => 
+    m.position === 'baskan' || m.position === 'baskan-yardimcisi'
+  );
+  // Row 2: Operasyonel Pozisyonlar (Sekreter, Sayman, Şube Sorumlusu)
+  const row2Members = sortedMembers.filter(m => 
+    m.position === 'sekreter' || m.position === 'sayman' || m.position === 'sube-sorumlusu'
+  );
 
   // Auto-scroll for mobile carousel
   useEffect(() => {
@@ -109,7 +129,7 @@ export function BoardGrid({ members }: { members: BoardMember[] }) {
 
   return (
     <>
-      {/* Row 1: Asıl Yöneticiler */}
+      {/* Row 1: Üst Düzey Yöneticiler */}
       {row1Members.length > 0 && (
         <div className="mb-12">
           {/* Desktop: Dynamic Grid */}
@@ -147,7 +167,7 @@ export function BoardGrid({ members }: { members: BoardMember[] }) {
         </div>
       )}
 
-      {/* Row 2: Yardımcılar */}
+      {/* Row 2: Operasyonel Pozisyonlar */}
       {row2Members.length > 0 && (
         <div>
           {/* Desktop: Dynamic Grid */}

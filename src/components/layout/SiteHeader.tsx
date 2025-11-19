@@ -3,18 +3,31 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Loader2, Menu, Music, Pause, Play, Volume2 } from "lucide-react";
+import { Loader2, Menu, Music, Pause, Play, Volume2, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { throttle } from "@/lib/utils";
 
 const navigation = [
   { name: "Ana Sayfa", href: "/" },
   { name: "Kulüp Hakkında", href: "/kulup-hakkinda" },
   { name: "Takımlarımız", href: "/takimlarimiz" },
   { name: "Hazırlık Grupları", href: "/hazirlik-gruplari" },
-  { name: "Yönetim Kurulu", href: "/yonetim-kurulu" },
+  { 
+    name: "Yönetim ve Organizasyon", 
+    dropdown: [
+      { name: "Yönetim Kurulu", href: "/yonetim-kurulu" },
+      { name: "İdari Kurul", href: "/idari-kurul" },
+    ]
+  },
   { name: "Teknik Ekip", href: "/teknik-ekip" },
   { name: "Blog", href: "/blog" },
   { name: "İletişim", href: "/iletisim" },
@@ -51,9 +64,10 @@ export function SiteHeader() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       setIsScrolled(window.scrollY > 20);
-    };
+    }, 100);
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -302,17 +316,45 @@ export function SiteHeader() {
 
           <div className="hidden md:flex items-center space-x-6">
             <nav className="flex items-center space-x-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="relative px-4 py-2 text-sm font-medium text-white hover:text-white transition-all duration-300 group"
-                >
-                  <span className="relative z-10">{item.name}</span>
-                  <div className="absolute inset-0 bg-white/10 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 origin-center" />
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-accent group-hover:w-8 transition-all duration-300" />
-                </Link>
-              ))}
+              {navigation.map((item) => {
+                // Dropdown item
+                if ('dropdown' in item && item.dropdown) {
+                  return (
+                    <DropdownMenu key={item.name}>
+                      <DropdownMenuTrigger className="relative px-4 py-2 text-sm font-medium text-white hover:text-white transition-all duration-300 group flex items-center gap-1 outline-none">
+                        <span className="relative z-10">{item.name}</span>
+                        <ChevronDown className="h-4 w-4 relative z-10" />
+                        <div className="absolute inset-0 bg-white/10 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 origin-center" />
+                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-accent group-hover:w-8 transition-all duration-300" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-primary-dark border-primary/20 min-w-[200px]">
+                        {item.dropdown.map((subItem) => (
+                          <DropdownMenuItem key={subItem.name} asChild>
+                            <Link 
+                              href={subItem.href}
+                              className="text-white hover:bg-white/10 cursor-pointer px-4 py-2 focus:bg-white/10 focus:text-white"
+                            >
+                              {subItem.name}
+                            </Link>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  );
+                }
+                // Regular link
+                return (
+                  <Link
+                    key={item.name}
+                    href={'href' in item ? item.href : '#'}
+                    className="relative px-4 py-2 text-sm font-medium text-white hover:text-white transition-all duration-300 group"
+                  >
+                    <span className="relative z-10">{item.name}</span>
+                    <div className="absolute inset-0 bg-white/10 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 origin-center" />
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-accent group-hover:w-8 transition-all duration-300" />
+                  </Link>
+                );
+              })}
             </nav>
             
             {/* Desktop Anthem Button + Modal */}
@@ -392,16 +434,39 @@ export function SiteHeader() {
               >
                 <SheetTitle className="sr-only">Navigasyon Menüsü</SheetTitle>
                 <div className="flex flex-col space-y-2 mt-8">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="text-lg font-medium text-white hover:text-accent transition-colors py-3 px-4 rounded-lg hover:bg-white/10"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  {navigation.map((item) => {
+                    // Dropdown item for mobile
+                    if ('dropdown' in item && item.dropdown) {
+                      return (
+                        <div key={item.name} className="flex flex-col">
+                          <div className="text-lg font-semibold text-white py-2 px-4">
+                            {item.name}
+                          </div>
+                          {item.dropdown.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              href={subItem.href}
+                              className="text-base font-medium text-white/90 hover:text-accent transition-colors py-2 px-8 rounded-lg hover:bg-white/10"
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      );
+                    }
+                    // Regular link for mobile
+                    return (
+                      <Link
+                        key={item.name}
+                        href={'href' in item ? item.href : '#'}
+                        className="text-lg font-medium text-white hover:text-accent transition-colors py-3 px-4 rounded-lg hover:bg-white/10"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    );
+                  })}
                 </div>
               </SheetContent>
             </Sheet>
@@ -411,4 +476,3 @@ export function SiteHeader() {
     </header>
   );
 }
-

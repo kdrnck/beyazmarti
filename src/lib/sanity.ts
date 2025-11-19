@@ -162,12 +162,29 @@ export const queries = {
   }`,
   
   // Board members
-  boardMembers: `*[_type == "boardMember"] | order(row asc, order asc) {
+  boardMembers: `*[_type == "boardMember"] | order(position asc, order asc) {
     _id,
     name,
     role,
     bio,
-    row,
+    position,
+    photo{
+      asset->{
+        _id,
+        url
+      },
+      alt
+    }
+  }`,
+
+  // Executive Board members
+  executiveBoardMembers: `*[_type == "executiveBoardMember"] | order(order asc) {
+    _id,
+    name,
+    role,
+    bio,
+    layoutSize,
+    order,
     photo{
       asset->{
         _id,

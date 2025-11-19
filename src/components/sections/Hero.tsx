@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Trophy, Users, Target, Calendar, Heart } from "lucide-react";
+import { ArrowRight, Trophy, Users, Target, Calendar } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { client, queries, fetchWithRetry } from "@/lib/sanity";
+import { queries, fetchWithRetry } from "@/lib/sanity";
 
 interface Match {
   _id: string;
@@ -46,23 +46,40 @@ interface HeroProps {
 export function Hero({ latestMatch, showLatestMatch = true }: HeroProps) {
   const [isPaused, setIsPaused] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
+  const animationFrameRef = useRef<number>(0);
+  const lastTimestampRef = useRef<number>(0);
+  
+  // Scroll animation using requestAnimationFrame
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused) {
+      cancelAnimationFrame(animationFrameRef.current);
+      return;
+    }
 
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
 
-    const scroll = () => {
-      if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth - scrollContainer.clientWidth) {
-        scrollContainer.scrollLeft = 0;
-      } else {
-        scrollContainer.scrollLeft += 1;
+    const animate = (timestamp: number) => {
+      if (!lastTimestampRef.current) lastTimestampRef.current = timestamp;
+      
+      // 30ms interval equivalent (approx 33fps) to match original speed
+      const elapsed = timestamp - lastTimestampRef.current;
+      
+      if (elapsed >= 30) {
+        if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth - scrollContainer.clientWidth) {
+          scrollContainer.scrollLeft = 0;
+        } else {
+          scrollContainer.scrollLeft += 1;
+        }
+        lastTimestampRef.current = timestamp;
       }
+      
+      animationFrameRef.current = requestAnimationFrame(animate);
     };
 
-    const interval = setInterval(scroll, 30);
-    return () => clearInterval(interval);
+    animationFrameRef.current = requestAnimationFrame(animate);
+    
+    return () => cancelAnimationFrame(animationFrameRef.current);
   }, [isPaused]);
 
   const handleTouchStart = () => {
@@ -126,22 +143,6 @@ export function Hero({ latestMatch, showLatestMatch = true }: HeroProps) {
   const getMatchResult = (match: Match) => {
     if (!match) return "0-0";
     return match.result || "0-0";
-  };
-
-  const getSetResults = (match: Match) => {
-    if (!match) return "";
-    
-    const sets = [match.set1, match.set2, match.set3];
-    
-    if (match.hasSet4 && match.set4) {
-      sets.push(match.set4);
-    }
-    
-    if (match.hasSet5 && match.set5) {
-      sets.push(match.set5);
-    }
-    
-    return sets.join(', ');
   };
 
   const getSetResultsArray = (match: Match) => {

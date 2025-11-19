@@ -34,6 +34,9 @@ export default defineConfig({
               .title('Yönetim Kurulu')
               .child(S.documentTypeList('boardMember').title('Yönetim Kurulu Üyeleri')),
             S.listItem()
+              .title('İdari Kurul')
+              .child(S.documentTypeList('executiveBoardMember').title('İdari Kurul Üyeleri')),
+            S.listItem()
               .title('Teknik Ekip')
               .child(S.documentTypeList('staff').title('Teknik Ekip Üyeleri')),
             S.listItem()

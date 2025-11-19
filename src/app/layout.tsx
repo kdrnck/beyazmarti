@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ScrollOptimizer } from "@/components/layout/ScrollOptimizer";
 
 export const metadata: Metadata = {
   title: "Beyaz Martı Spor Kulübü",
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body className="font-sans antialiased bg-background text-text border-[9px] border-[#D32F2F] rounded-[8px]" suppressHydrationWarning={true}>
+        <ScrollOptimizer />
         {children}
       </body>
     </html>

@@ -314,16 +314,18 @@ export const boardMember = defineType({
       initialValue: 0,
     }),
     defineField({
-      name: 'row',
-      title: 'Satır',
+      name: 'position',
+      title: 'Pozisyon',
       type: 'string',
       options: {
         list: [
-          { title: '1. Satır (Asıl Yöneticiler)', value: '1' },
-          { title: '2. Satır (Yardımcılar)', value: '2' },
+          { title: 'Başkan', value: 'baskan' },
+          { title: 'Başkan Yardımcısı', value: 'baskan-yardimcisi' },
+          { title: 'Sekreter', value: 'sekreter' },
+          { title: 'Sayman', value: 'sayman' },
+          { title: 'Şube Sorumlusu', value: 'sube-sorumlusu' },
         ],
       },
-      initialValue: '1',
       validation: (Rule) => Rule.required(),
     }),
   ],
@@ -332,6 +334,85 @@ export const boardMember = defineType({
       title: 'name',
       subtitle: 'role',
       media: 'photo',
+    },
+  },
+})
+
+export const executiveBoardMember = defineType({
+  name: 'executiveBoardMember',
+  title: 'İdari Kurul Üyesi',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'name',
+      title: 'Ad Soyad',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'role',
+      title: 'Görev',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'photo',
+      title: 'Fotoğraf',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt Text',
+          description: 'Görsel için açıklayıcı metin (SEO için önemli)',
+        }
+      ]
+    }),
+    defineField({
+      name: 'bio',
+      title: 'Biyografi',
+      type: 'text',
+      rows: 4,
+    }),
+    defineField({
+      name: 'order',
+      title: 'Sıralama',
+      type: 'number',
+      initialValue: 0,
+      description: 'Global sıralama (0 = en başta, 1 = ikinci sırada, vb.)',
+      validation: (Rule) => Rule.required().min(0),
+    }),
+    defineField({
+      name: 'layoutSize',
+      title: 'Kart Boyutu',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Küçük Kart (1x1)', value: '1x1' },
+          { title: 'Büyük Kart (2x2)', value: '2x2' },
+        ],
+      },
+      initialValue: '1x1',
+      validation: (Rule) => Rule.required(),
+      description: 'Küçük kart = 1 birim, Büyük kart = 2 birim (Bir satırda 4 birim yer vardır)',
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'name',
+      subtitle: 'role',
+      media: 'photo',
+      layoutSize: 'layoutSize',
+    },
+    prepare({ title, subtitle, media, layoutSize }) {
+      return {
+        title,
+        subtitle: `${subtitle} (${layoutSize})`,
+        media,
+      };
     },
   },
 })
@@ -1062,6 +1143,7 @@ export const schemaTypes = [
   tag,
   player,
   boardMember,
+  executiveBoardMember,
   opponentTeam,
   match,
   team,

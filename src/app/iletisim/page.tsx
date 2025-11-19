@@ -1,11 +1,16 @@
 "use client";
 
+import dynamic from 'next/dynamic';
 import { SiteHeader } from "@/components/layout/SiteHeader";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { Section } from "@/components/sections/Section";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+
+// Lazy load the footer as requested for better performance
+const SiteFooter = dynamic(() => import("@/components/layout/SiteFooter").then(mod => mod.SiteFooter), {
+  loading: () => <div className="h-20 w-full bg-surface/5 animate-pulse" />
+});
 
 export default function IletisimPage() {
   return (
