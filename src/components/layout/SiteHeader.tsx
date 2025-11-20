@@ -25,7 +25,7 @@ const navigation = [
     name: "Yönetim ve Organizasyon", 
     dropdown: [
       { name: "Yönetim Kurulu", href: "/yonetim-kurulu" },
-      { name: "İdari Kurul", href: "/idari-kurul" },
+      { name: "İdari Kadro", href: "/idari-kurul" },
     ]
   },
   { name: "Teknik Ekip", href: "/teknik-ekip" },
@@ -314,8 +314,8 @@ export function SiteHeader() {
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-6">
-            <nav className="flex items-center space-x-1">
+          <div className="hidden md:flex items-center">
+            <nav className="flex items-center gap-1">
               {navigation.map((item) => {
                 // Dropdown item
                 if ('dropdown' in item && item.dropdown) {
@@ -356,71 +356,9 @@ export function SiteHeader() {
                 );
               })}
             </nav>
-            
-            {/* Desktop Anthem Button + Modal */}
-            <Dialog open={isAnthemModalOpenDesktop} onOpenChange={setIsAnthemModalOpenDesktop}>
-              <DialogTrigger asChild>
-                <div>{renderAnthemButton()}</div>
-              </DialogTrigger>
-              <DialogContent className="bg-primary-dark text-white border border-primary max-w-md z-[100]">
-                <DialogHeader>
-                  <DialogTitle>Takım Marşı</DialogTitle>
-                </DialogHeader>
-                {renderAnthemModal()}
-              </DialogContent>
-            </Dialog>
           </div>
 
-          <div className="flex items-center gap-2 md:hidden">
-            {/* Mobile Anthem Button + Modal */}
-            {anthemAvailable && !isAnthemLoading && (
-              <>
-                <Dialog open={isAnthemModalOpenMobile} onOpenChange={setIsAnthemModalOpenMobile}>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-white hover:bg-white/10 rounded-lg"
-                    >
-                      <Music className="h-5 w-5" />
-                      <span className="sr-only">Takım marşını aç</span>
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-primary-dark text-white border border-primary max-w-sm z-[100]">
-                    <DialogHeader>
-                      <DialogTitle>Takım Marşı</DialogTitle>
-                    </DialogHeader>
-                    {renderAnthemModal()}
-                  </DialogContent>
-                </Dialog>
-                
-                {/* Mobile Play/Pause button - only shows after first play */}
-                {hasEverPlayed && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      const audio = audioRef.current;
-                      if (audio) {
-                        if (audio.paused) {
-                          audio.play();
-                        } else {
-                          audio.pause();
-                        }
-                      }
-                    }}
-                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-                    aria-label={isPlaying ? "Durdur" : "Çal"}
-                  >
-                    {isPlaying ? (
-                      <Pause className="h-5 w-5" />
-                    ) : (
-                      <Play className="h-5 w-5" />
-                    )}
-                  </button>
-                )}
-              </>
-            )}
-
+          <div className="flex items-center md:hidden">
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-lg">

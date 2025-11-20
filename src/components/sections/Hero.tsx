@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Trophy, Users, Target, Calendar } from "lucide-react";
+import { ArrowRight, Trophy, Users, Target, Calendar, Music, Play, Pause, Volume2, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { queries, fetchWithRetry } from "@/lib/sanity";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface Match {
   _id: string;
@@ -49,6 +50,14 @@ export function Hero({ latestMatch, showLatestMatch = true }: HeroProps) {
   const animationFrameRef = useRef<number>(0);
   const lastTimestampRef = useRef<number>(0);
   
+  // Anthem state
+  const [anthemData, setAnthemData] = useState<any | null>(null);
+  const [isAnthemLoading, setIsAnthemLoading] = useState(true);
+  const [isAnthemModalOpen, setIsAnthemModalOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hasEverPlayed, setHasEverPlayed] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
   // Scroll animation using requestAnimationFrame
   useEffect(() => {
     if (isPaused) {
@@ -89,6 +98,57 @@ export function Hero({ latestMatch, showLatestMatch = true }: HeroProps) {
   const handleTouchEnd = () => {
     setTimeout(() => setIsPaused(false), 2000);
   };
+
+  // Load anthem data
+  useEffect(() => {
+    let cancelled = false;
+    async function loadAnthem() {
+      try {
+        setIsAnthemLoading(true);
+        const response = await fetch("/api/sanity/anthem", { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (!cancelled) {
+          setAnthemData(data.anthem);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setAnthemData(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsAnthemLoading(false);
+        }
+      }
+    }
+    loadAnthem();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Audio event listeners
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handlePlay = () => {
+      setIsPlaying(true);
+      setHasEverPlayed(true);
+    };
+    const handlePause = () => setIsPlaying(false);
+    const handleEnded = () => setIsPlaying(false);
+
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
+    audio.addEventListener("ended", handleEnded);
+
+    return () => {
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [anthemData?.audioFile?.asset?.url]);
 
   // Stats component fetching from Sanity
   async function getStats() {
@@ -216,7 +276,109 @@ export function Hero({ latestMatch, showLatestMatch = true }: HeroProps) {
                   Takımlarımız
                 </Link>
               </Button>
+              
+              {/* Anthem Button */}
+              {!isAnthemLoading && anthemData?.audioFile?.asset?.url && (
+                <Dialog open={isAnthemModalOpen} onOpenChange={setIsAnthemModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      size="lg" 
+                      variant="outline" 
+                      className="border-white/50 text-white hover:bg-white/10 hover:border-white"
+                    >
+                      <Music className="mr-2 h-4 w-4" />
+                      Marşımız
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-primary-dark text-white border border-primary max-w-md z-[100]">
+                    <DialogHeader>
+                      <DialogTitle>Takım Marşı</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 mb-2">
+                        <Music className="h-5 w-5 text-white" />
+                        <div>
+                          <h3 className="font-semibold text-white">{anthemData?.title}</h3>
+                          {anthemData?.description && (
+                            <p className="text-sm text-white/70 mt-1">{anthemData.description}</p>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <p className="text-xs text-white/60 text-center">
+                        Bu ekranı kapatıp marşımızı dinlemeye devam edebilirsiniz!
+                      </p>
+                      
+                      <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                        <div className="flex items-center justify-center gap-2 mb-4">
+                          <button
+                            onClick={() => {
+                              const audio = audioRef.current;
+                              if (audio) audio.currentTime = Math.max(0, audio.currentTime - 10);
+                            }}
+                            className="px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm font-medium transition-colors"
+                          >
+                            ← 10s
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              const audio = audioRef.current;
+                              if (audio) {
+                                if (audio.paused) {
+                                  audio.play();
+                                } else {
+                                  audio.pause();
+                                }
+                              }
+                            }}
+                            className="p-4 bg-accent hover:bg-accent/90 rounded-full text-white transition-colors"
+                          >
+                            {isPlaying ? (
+                              <Pause className="h-6 w-6" />
+                            ) : (
+                              <Play className="h-6 w-6 ml-0.5" />
+                            )}
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              const audio = audioRef.current;
+                              if (audio) audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+                            }}
+                            className="px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm font-medium transition-colors"
+                          >
+                            10s →
+                          </button>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <Volume2 className="h-4 w-4 text-white/70 flex-shrink-0" />
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            defaultValue="70"
+                            onChange={(e) => {
+                              const audio = audioRef.current;
+                              if (audio) audio.volume = Number(e.target.value) / 100;
+                            }}
+                            className="flex-1 accent-accent cursor-pointer"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
+            
+            {/* Hidden audio element */}
+            {anthemData?.audioFile?.asset?.url && (
+              <audio ref={audioRef} preload="metadata">
+                <source src={anthemData?.audioFile?.asset?.url} type="audio/mpeg" />
+              </audio>
+            )}
 
           {/* Latest Match Section */}
           {showLatestMatch && latestMatch && latestMatch.homeTeam && latestMatch.awayTeam && (

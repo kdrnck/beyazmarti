@@ -56,9 +56,9 @@ export default async function Home() {
                     <a href="/maclar" className="inline-flex items-center gap-2 group">
                       <h2 className="font-heading font-bold text-2xl text-text mb-4 group-hover:text-accent transition-colors">Geçmiş Maçlar →</h2>
                     </a>
-                    <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-2 -mx-4 px-4 md:mx-0 md:px-0">
+                    <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 overflow-x-auto md:overflow-visible pb-2 snap-x snap-mandatory md:snap-none">
                       {past.map((match: any) => (
-                        <div key={match._id} className="min-w-[280px] shrink-0 md:min-w-0">
+                        <div key={match._id} className="min-w-[240px] max-w-[240px] shrink-0 md:min-w-0 md:max-w-none snap-start">
                           <MatchCard
                             variant="compact"
                             date={match.date}
@@ -80,9 +80,9 @@ export default async function Home() {
                     <a href="/maclar" className="inline-flex items-center gap-2 group">
                       <h2 className="font-heading font-bold text-2xl text-text mb-4 group-hover:text-accent transition-colors">Gelecek Maçlar →</h2>
                     </a>
-                    <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-2 -mx-4 px-4 md:mx-0 md:px-0">
+                    <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 overflow-x-auto md:overflow-visible pb-2 snap-x snap-mandatory md:snap-none">
                       {upcoming.map((match: any) => (
-                        <div key={match._id} className="min-w-[280px] shrink-0 md:min-w-0">
+                        <div key={match._id} className="min-w-[240px] max-w-[240px] shrink-0 md:min-w-0 md:max-w-none snap-start">
                           <MatchCard
                             variant="compact"
                             date={match.date}
