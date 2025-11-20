@@ -174,24 +174,10 @@ export function Hero({ latestMatch, showLatestMatch = true }: HeroProps) {
   };
 
   return (
-    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background/95 to-background">
-      {/* Background Logo */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="relative w-full h-full">
-          <Image
-            src="/bmbgo.svg"
-            alt=""
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-            style={{ objectFit: 'cover' }}
-          />
-        </div>
-      </div>
-
-      {/* Elegant Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
+    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+      {/* Tonal Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/80 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 mix-blend-screen" />
       
       {/* Geometric Shapes */}
       <div className="absolute top-0 left-0 w-full h-full">
@@ -212,16 +198,11 @@ export function Hero({ latestMatch, showLatestMatch = true }: HeroProps) {
               </h1>
             </div>
 
-             <p className="text-2xl md:text-4xl mb-6 max-w-2xl mx-auto leading-relaxed font-medium">
-               <span className="bg-gradient-to-r from-primary via-primary/80 to-white bg-clip-text text-transparent">
-                 Zeki - Çevik - Ahlaklı
-               </span>
-             </p>
-
-             {/* Spacer div to maintain spacing (logo removed but space preserved) */}
-             <div className="flex justify-center mb-8 md:mb-12">
-               <div className="w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64" aria-hidden="true"></div>
-             </div>
+            <p className="text-2xl md:text-4xl mb-5 max-w-2xl mx-auto leading-relaxed font-medium">
+              <span className="bg-gradient-to-r from-primary via-primary/80 to-white bg-clip-text text-transparent">
+                Zeki - Çevik - Ahlaklı
+              </span>
+            </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Button asChild size="lg" className="bg-primary hover:bg-accent text-white">
