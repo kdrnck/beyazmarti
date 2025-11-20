@@ -396,7 +396,15 @@ export const queries = {
     description,
     ageGroup,
     level,
-    achievements
+    achievements,
+    teamImage{
+      asset->{
+        _id,
+        url
+      },
+      alt
+    },
+    imageDescription
   }`,
 
   // Staff

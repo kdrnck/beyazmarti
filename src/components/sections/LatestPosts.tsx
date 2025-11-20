@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { client, queries } from "@/lib/sanity";
+import { fetchWithRetry, queries } from "@/lib/sanity";
 
 interface Post {
   _id: string;
@@ -30,21 +30,38 @@ interface Post {
 
 async function getLatestPosts(): Promise<Post[]> {
   try {
-    const posts = await client.fetch(queries.latestPosts);
-    return posts || [];
+    const posts = await fetchWithRetry<Post[]>(queries.latestPosts, {}, 3);
+    return Array.isArray(posts) ? posts : [];
   } catch (error) {
     console.error('Error fetching latest posts:', error);
+    // Hata durumunda boş array döndür, component crash etmesin
     return [];
   }
 }
 
 export function LatestPosts() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getLatestPosts().then(setPosts);
+    async function loadPosts() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const data = await getLatestPosts();
+        setPosts(data);
+      } catch (err) {
+        console.error('Failed to load posts:', err);
+        setError('Blog yazıları yüklenirken bir hata oluştu.');
+        setPosts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadPosts();
   }, []);
 
   // Auto-scroll for mobile carousel
@@ -73,6 +90,43 @@ export function LatestPosts() {
     setTimeout(() => setIsPaused(false), 2000);
   };
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <section className="py-16 bg-surface/5">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="font-heading font-bold text-3xl text-text mb-4">
+              Son Haberler
+            </h2>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+              Yükleniyor...
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <section className="py-16 bg-surface/5">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="font-heading font-bold text-3xl text-text mb-4">
+              Son Haberler
+            </h2>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+              {error}
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Empty state
   if (!posts || posts.length === 0) {
     return (
       <section className="py-16 bg-surface/5">

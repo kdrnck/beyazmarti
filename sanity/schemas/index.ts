@@ -658,6 +658,29 @@ export const team = defineType({
       placeholder: 'Örn: 3 Şampiyonluk',
     }),
     defineField({
+      name: 'teamImage',
+      title: 'Takım Resmi',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt Text',
+          description: 'Görsel için açıklayıcı metin (SEO için önemli)',
+        }
+      ]
+    }),
+    defineField({
+      name: 'imageDescription',
+      title: 'Resim Açıklaması',
+      type: 'text',
+      rows: 3,
+      description: 'Takım resminin altında gösterilecek açıklama metni',
+    }),
+    defineField({
       name: 'isActive',
       title: 'Aktif Takım',
       type: 'boolean',

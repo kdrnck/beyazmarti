@@ -175,6 +175,21 @@ export function Hero({ latestMatch, showLatestMatch = true }: HeroProps) {
 
   return (
     <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background/95 to-background">
+      {/* Background Logo */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="relative w-full h-full">
+          <Image
+            src="/bmbgo.svg"
+            alt=""
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+            style={{ objectFit: 'cover' }}
+          />
+        </div>
+      </div>
+
       {/* Elegant Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
       
@@ -194,15 +209,19 @@ export function Hero({ latestMatch, showLatestMatch = true }: HeroProps) {
             <div>
               <h1 className="font-heading font-bold text-5xl md:text-7xl text-white mb-6">
                 Beyaz Martı
-                <span className="block bg-gradient-to-r from-primary via-primary/80 to-white bg-clip-text text-transparent">
-                  Spor Kulübü
-                </span>
               </h1>
             </div>
 
-             <p className="text-xl md:text-2xl text-white mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
-               Zeki - Çevik - Ahlaklı
+             <p className="text-2xl md:text-4xl mb-6 max-w-2xl mx-auto leading-relaxed font-medium">
+               <span className="bg-gradient-to-r from-primary via-primary/80 to-white bg-clip-text text-transparent">
+                 Zeki - Çevik - Ahlaklı
+               </span>
              </p>
+
+             {/* Spacer div to maintain spacing (logo removed but space preserved) */}
+             <div className="flex justify-center mb-8 md:mb-12">
+               <div className="w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64" aria-hidden="true"></div>
+             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Button asChild size="lg" className="bg-primary hover:bg-accent text-white">

@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://beyazmarti.com/sitemap.xml
+This site created by kdrnck a.k.a. Kadir Nacak. He is a great guy!

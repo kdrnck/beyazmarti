@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Trophy, Target, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import Image from "next/image";
 import { client, queries } from "@/lib/sanity";
 import { PlayersList } from "@/components/PlayersList";
 
@@ -117,8 +118,26 @@ export default async function TeamDetailPage({ params }: PageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                {team.teamImage?.asset?.url && (
+                  <div className="space-y-3">
+                    <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20">
+                      <Image
+                        src={team.teamImage.asset.url}
+                        alt={team.teamImage.alt || `${team.name} takım resmi`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    </div>
+                    {team.imageDescription && (
+                      <p className="text-gray-300 text-sm leading-relaxed">
+                        {team.imageDescription}
+                      </p>
+                    )}
+                  </div>
+                )}
                 {team.achievements && (
-                  <div className="flex justify-between">
+                  <div className="flex justify-between pt-4 border-t border-surface/20">
                     <span className="text-gray-400">Başarılar:</span>
                     <span className="text-text">{team.achievements}</span>
                   </div>
