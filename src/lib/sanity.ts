@@ -387,7 +387,8 @@ export const queries = {
     description,
     ageGroup,
     level,
-    achievements
+    achievements,
+    order
   }`,
   
   teamBySlug: `*[_type == "team" && slug.current == $slug && isActive == true][0] {

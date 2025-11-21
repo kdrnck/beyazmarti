@@ -18,6 +18,7 @@ interface Team {
   ageGroup: string;
   level?: string;
   achievements?: string;
+  order?: number;
 }
 
 export const metadata = {
@@ -48,6 +49,7 @@ export default async function TakimlarimizPage() {
     name: team.name, 
     slug: team.slug, 
     id: team._id,
+    order: team.order,
     description: team.description 
   })));
 
