@@ -25,7 +25,7 @@ const navigation = [
     name: "Yönetim ve Organizasyon", 
     dropdown: [
       { name: "Yönetim Kurulu", href: "/yonetim-kurulu" },
-      { name: "İdari Kadro", href: "/idari-kurul" },
+      { name: "İdari Kadro", href: "/idari-kadro" },
     ]
   },
   { name: "Teknik Ekip", href: "/teknik-ekip" },

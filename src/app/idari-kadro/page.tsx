@@ -7,8 +7,8 @@ import { queries, fetchWithRetry } from "@/lib/sanity";
 import { ExecutiveBoardGrid } from "@/components/ExecutiveBoardGrid";
 
 export const metadata = {
-  title: "İdari Kurul - Beyaz Martı Spor Kulübü",
-  description: "Beyaz Martı Spor Kulübü idari kurul üyeleri hakkında bilgi edinin.",
+  title: "İdari Kadro - Beyaz Martı Spor Kulübü",
+  description: "Beyaz Martı Spor Kulübü idari kadro üyeleri hakkında bilgi edinin.",
 };
 
 // Revalidate every 60 seconds to keep executive board members fresh
@@ -24,7 +24,7 @@ async function getExecutiveBoardMembers() {
   }
 }
 
-export default async function IdariKurulPage() {
+export default async function IdariKadroPage() {
   const executiveBoardMembers = await getExecutiveBoardMembers();
 
   return (
@@ -32,7 +32,7 @@ export default async function IdariKurulPage() {
       <SiteHeader />
       
       <PageHeader 
-        title="İdari Kurul"
+        title="İdari Kadro"
         subtitle="İdari Ekibimiz"
         description="Beyaz Martı Spor Kulübü'nün operasyonel yönetiminden sorumlu ekibimiz."
       />
@@ -40,11 +40,11 @@ export default async function IdariKurulPage() {
       <Section>
         <div className="text-center mb-12">
           <h2 className="font-heading font-bold text-3xl text-text mb-4">
-            İdari Kurul Üyelerimiz
+            İdari Kadro Üyelerimiz
           </h2>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">
             Kulübümüzün günlük operasyonlarını yöneten ve organizasyonu sağlayan
-            idari kurul üyelerimiz.
+            idari kadro üyelerimiz.
           </p>
         </div>
 
@@ -53,12 +53,12 @@ export default async function IdariKurulPage() {
         ) : (
           <div className="text-center py-12">
             <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-text mb-2">İdari Kurul Bilgileri</h3>
+            <h3 className="text-xl font-semibold text-text mb-2">İdari Kadro Bilgileri</h3>
             <p className="text-gray-400 mb-4">
-              İdari kurul üyelerimizin bilgileri henüz yüklenmedi.
+              İdari kadro üyelerimizin bilgileri henüz yüklenmedi.
             </p>
             <p className="text-sm text-gray-500">
-              Admin panelinden idari kurul üyeleri yüklendikten sonra burada görünecek.
+              Admin panelinden idari kadro üyeleri yüklendikten sonra burada görünecek.
             </p>
           </div>
         )}

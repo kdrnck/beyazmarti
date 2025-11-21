@@ -162,12 +162,13 @@ export const queries = {
   }`,
   
   // Board members
-  boardMembers: `*[_type == "boardMember"] | order(position asc, order asc) {
+  boardMembers: `*[_type == "boardMember"] {
     _id,
     name,
     role,
     bio,
     position,
+    order,
     photo{
       asset->{
         _id,

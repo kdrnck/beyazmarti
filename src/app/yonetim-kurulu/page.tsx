@@ -19,9 +19,22 @@ export const revalidate = 60;
 async function getBoardMembers() {
   try {
     const members = await fetchWithRetry<any[]>(queries.boardMembers, {}, 2, ['boardMembers']);
+    
+    // Debug only in development
+    if (process.env.NODE_ENV === 'development') {
+      if (!members || members.length === 0) {
+        console.warn('⚠️ No board members found. Please check:');
+        console.warn('1. Sanity Studio: http://localhost:3000/studio');
+        console.warn('2. Ensure boardMember documents exist and are published');
+        console.warn('3. Check Sanity project ID and dataset in .env');
+      } else {
+        console.log(`✅ Found ${members.length} board member(s)`);
+      }
+    }
+    
     return members || [];
   } catch (error) {
-    console.error('Error fetching board members:', error);
+    console.error('❌ Error fetching board members:', error);
     return [];
   }
 }

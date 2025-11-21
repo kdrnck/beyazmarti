@@ -25,6 +25,15 @@ export function BoardGrid({ members }: { members: BoardMember[] }) {
 
   const onClick = (m: BoardMember) => { setSelected(m); setOpen(true); };
 
+  // Debug: Log member data in development
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development' && members.length > 0) {
+      console.log('📋 BoardGrid received members:', members.length);
+      console.log('📋 Sample member:', members[0]);
+      console.log('📋 All positions:', members.map(m => m.position));
+    }
+  }, [members]);
+
   // Pozisyon sıralaması: Başkan > Başkan Yardımcısı > Sekreter > Sayman > Şube Sorumlusu
   const positionOrder: { [key: string]: number } = {
     'baskan': 1,
@@ -38,6 +47,10 @@ export function BoardGrid({ members }: { members: BoardMember[] }) {
   const sortedMembers = [...members].sort((a, b) => {
     const orderA = positionOrder[a.position || ''] || 999;
     const orderB = positionOrder[b.position || ''] || 999;
+    // If same position order, sort by order field if available
+    if (orderA === orderB && orderA !== 999) {
+      return (a as any).order - (b as any).order;
+    }
     return orderA - orderB;
   });
 
@@ -49,6 +62,22 @@ export function BoardGrid({ members }: { members: BoardMember[] }) {
   const row2Members = sortedMembers.filter(m => 
     m.position === 'sekreter' || m.position === 'sayman' || m.position === 'sube-sorumlusu'
   );
+  
+  // Eğer hiçbir üye filtreleme kriterlerine uymuyorsa, tüm üyeleri göster
+  const hasFilteredMembers = row1Members.length > 0 || row2Members.length > 0;
+  const allMembers = hasFilteredMembers ? [] : sortedMembers;
+
+  // Debug: Log filtering results in development
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 Row1 members:', row1Members.length);
+      console.log('🔍 Row2 members:', row2Members.length);
+      console.log('🔍 All members (fallback):', allMembers.length);
+      if (allMembers.length > 0) {
+        console.log('⚠️ Using fallback: showing all members because position filtering returned empty');
+      }
+    }
+  }, [row1Members.length, row2Members.length, allMembers.length]);
 
   // Auto-scroll for mobile carousel
   useEffect(() => {
@@ -198,6 +227,41 @@ export function BoardGrid({ members }: { members: BoardMember[] }) {
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {row2Members.map((member) => (
+                <MemberCard key={member._id} member={member} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Fallback: Eğer filtreleme sonucu boşsa, tüm üyeleri göster */}
+      {allMembers.length > 0 && (
+        <div>
+          {/* Desktop: Dynamic Grid */}
+          <div className="hidden md:flex justify-center">
+            <div 
+              className={`grid gap-6`}
+              style={{
+                gridTemplateColumns: `repeat(${Math.min(allMembers.length, 4)}, 1fr)`,
+                maxWidth: '100%',
+              }}
+            >
+              {allMembers.map((member) => (
+                <MemberCard key={member._id} member={member} />
+              ))}
+            </div>
+          </div>
+          {/* Mobile: Carousel */}
+          {allMembers.length === 1 ? (
+            <div className="md:hidden pb-4 -mx-4 grid place-items-center">
+              <MemberCard key={allMembers[0]._id} member={allMembers[0]} />
+            </div>
+          ) : (
+            <div 
+              className="md:hidden flex gap-6 pb-4 scrollbar-hide overflow-x-auto -mx-4 px-4"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {allMembers.map((member) => (
                 <MemberCard key={member._id} member={member} />
               ))}
             </div>
