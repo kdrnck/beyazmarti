@@ -54,13 +54,13 @@ export function BoardGrid({ members }: { members: BoardMember[] }) {
     return orderA - orderB;
   });
 
-  // Row 1: Üst Düzey Yöneticiler (Başkan, Başkan Yardımcısı)
+  // Row 1: Üst Düzey Yöneticiler (Başkan, Başkan Yardımcısı, Sekreter)
   const row1Members = sortedMembers.filter(m => 
-    m.position === 'baskan' || m.position === 'baskan-yardimcisi'
+    m.position === 'baskan' || m.position === 'baskan-yardimcisi' || m.position === 'sekreter'
   );
-  // Row 2: Operasyonel Pozisyonlar (Sekreter, Sayman, Şube Sorumlusu)
+  // Row 2: Operasyonel Pozisyonlar (Sayman, Şube Sorumlusu)
   const row2Members = sortedMembers.filter(m => 
-    m.position === 'sekreter' || m.position === 'sayman' || m.position === 'sube-sorumlusu'
+    m.position === 'sayman' || m.position === 'sube-sorumlusu'
   );
   
   // Eğer hiçbir üye filtreleme kriterlerine uymuyorsa, tüm üyeleri göster
@@ -158,7 +158,7 @@ export function BoardGrid({ members }: { members: BoardMember[] }) {
 
   return (
     <>
-      {/* Row 1: Üst Düzey Yöneticiler */}
+      {/* Row 1: Başkan, Başkan Yardımcısı, Sekreter */}
       {row1Members.length > 0 && (
         <div className="mb-12">
           {/* Desktop: Dynamic Grid */}
@@ -196,7 +196,7 @@ export function BoardGrid({ members }: { members: BoardMember[] }) {
         </div>
       )}
 
-      {/* Row 2: Operasyonel Pozisyonlar */}
+      {/* Row 2: Sayman, Şube Sorumlusu */}
       {row2Members.length > 0 && (
         <div>
           {/* Desktop: Dynamic Grid */}
